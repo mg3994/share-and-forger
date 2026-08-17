@@ -4,25 +4,57 @@
 <head>
   <meta charset='utf-8'/>
   <meta content='width=device-width, initial-scale=1.0' name='viewport'/>
-  <title><data:blog.pageTitle/> - Good Builder CV</title>
   
+  <b:if cond='data:blog.pageType == "index"'>
+    <title><data:blog.pageTitle/> - Good Builder CV | Professional Resume &amp; CV Builder</title>
+  <b:else/>
+    <b:if cond='data:blog.pageType == "error_page"'>
+      <title>Page Not Found - <data:blog.title/></title>
+    <b:else/>
+      <title><data:blog.pageName/> - <data:blog.title/></title>
+    </b:if>
+  </b:if>
+
+  <meta content="8460e5372c3ea4922948a239c40689ec" name="monetag"/>
+  <b:include data='blog' name='all-head-content'/>
+
+  <b:if cond='!data:blog.adultContent'>
+    <meta content='general' name='rating'/>
+  </b:if>
+  <b:if cond='data:blog.adultContent'>
+    <meta content='adult' name='rating'/>
+  </b:if>
+
   <!-- Fonts and Icons -->
   <link href='https://fonts.googleapis.com' rel='preconnect'/>
   <link crossorigin='anonymous' href='https://fonts.gstatic.com' rel='preconnect'/>
   <link href='https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Lora:ital,wght@0,400;0,600;1,400&amp;family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&amp;family=Montserrat:wght@400;500;600;700&amp;family=Open+Sans:wght@400;500;600;700&amp;family=Poppins:wght@400;500;600;700&amp;family=Roboto:wght@400;500;700&amp;display=swap' rel='stylesheet'/>
   <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css' rel='stylesheet'/>
   
+  <!-- QR Code & html2pdf.js Bundle -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <!-- html2pdf.js Bundle for PDF generation -->
   <script src='https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js'></script>
 
   <b:skin><![CDATA[
+    /*
+      -----------------------------------------------
+      Blogger Theme Style & Designer Variables
+      -----------------------------------------------
+      <Group description="Theme Colors" selector="body">
+        <Variable name="body.bg.color" description="Background Color" type="color" default="#f1f5f9" value="#f1f5f9"/>
+        <Variable name="body.text.color" description="Text Color" type="color" default="#1f2937" value="#1f2937"/>
+        <Variable name="primary.brand.color" description="Brand Color" type="color" default="#2563eb" value="#2563eb"/>
+      </Group>
+    */
+
     /* Blogger Required Reset */
     body {
       margin: 0;
       padding: 0;
-      background-color: #f3f4f6;
+      background-color: $(body.bg.color);
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      color: #1f2937;
+      color: $(body.text.color);
       line-height: 1.5;
     }
 
@@ -57,6 +89,15 @@
       position: sticky;
       top: 0;
       z-index: 50;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
     }
 
     .app-brand {
@@ -80,6 +121,21 @@
       font-weight: 600;
       letter-spacing: 0.03em;
     }
+
+    .legal-nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.8rem;
+    }
+
+    .legal-nav a {
+      color: #94a3b8;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .legal-nav a:hover { color: #38bdf8; text-decoration: underline; }
 
     .header-actions { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
 
@@ -331,6 +387,23 @@
     .template-timeline .timeline-item { position: relative; padding-left: 1.5rem; border-left: 2px solid var(--accent-color, #2563eb); margin-bottom: 1.25rem; }
     .template-timeline .timeline-dot { position: absolute; left: -6px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-color, #2563eb); }
 
+    /* Europass Template */
+    .template-europass { padding: 2rem; border-left: 12px solid var(--accent-color, #2563eb); min-height: 297mm; }
+    .template-europass .europass-header { display: flex; align-items: center; gap: 1.5rem; border-bottom: 2px dashed #cbd5e1; padding-bottom: 1.25rem; margin-bottom: 1.5rem; }
+
+    /* Sleek Dark Mode Template */
+    .template-sleek-dark { background: #0f172a !important; color: #f8fafc !important; padding: 2.5rem; min-height: 297mm; }
+    .template-sleek-dark h3 { color: var(--accent-color, #38bdf8) !important; border-bottom-color: var(--accent-color, #38bdf8) !important; }
+
+    /* Infographic & Grid Templates */
+    .template-infographic { padding: 2rem; display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; }
+    .template-minimal-grid { padding: 2.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+
+    
+    /* Page Break Controls */
+    .page-break-before { page-break-before: always !important; break-before: page !important; margin-top: 2rem !important; }
+    .page-break-avoid { page-break-inside: avoid !important; break-inside: avoid !important; }
+
     @media print {
       body { background: #ffffff !important; margin: 0 !important; padding: 0 !important; }
       .app-header, .editor-panel, .preview-toolbar, .mobile-view-toggle, .blogger-hidden-section { display: none !important; }
@@ -351,11 +424,19 @@
 
   <!-- Header -->
   <header class='app-header'>
-    <a class='app-brand' href='#'>
-      <i class='fa-solid fa-file-signature'></i>
-      <span>Good Builder CV</span>
-      <span class='domain-badge'>goodbuilder.cv</span>
-    </a>
+    <div class='header-left'>
+      <a class='app-brand' expr:href='data:blog.homepageUrl'>
+        <i class='fa-solid fa-file-signature'></i>
+        <span>Good Builder CV</span>
+        <span class='domain-badge'>goodbuilder.cv</span>
+      </a>
+      <nav class='legal-nav'>
+        <a expr:href='data:blog.canonicalHomepageUrl + "p/privacy-policy.html"'>Privacy Policy</a>
+        <a expr:href='data:blog.canonicalHomepageUrl + "p/terms.html"'>Terms</a>
+        <a expr:href='data:blog.canonicalHomepageUrl + "p/about.html"'>About</a>
+        <a expr:href='data:blog.canonicalHomepageUrl + "p/contact.html"'>Contact</a>
+      </nav>
+    </div>
     <div class='header-actions'>
       <button class='btn btn-outline-dark btn-sm' onclick='loadSampleData()'>
         <i class='fa-solid fa-wand-magic-sparkles'></i> Sample Data
@@ -370,6 +451,12 @@
         <i class='fa-solid fa-upload'></i> Import JSON
       </button>
       <input id='json-input' style='display:none;' type='file' accept='.json' onchange='importJSON(event)'/>
+      <button class='btn btn-outline-dark btn-sm' onclick='downloadDOCX()'>
+        <i class='fa-solid fa-file-word'></i> Export Word (.doc)
+      </button>
+      <button class='btn btn-outline-dark btn-sm' onclick='downloadStandaloneHTML()'>
+        <i class='fa-solid fa-code'></i> Download HTML
+      </button>
       <button class='btn btn-secondary btn-sm' onclick='window.print()'>
         <i class='fa-solid fa-print'></i> Print / Browser PDF
       </button>
@@ -397,6 +484,11 @@
         <button class='editor-tab-btn' onclick='switchTab("references")'><i class='fa-solid fa-users'></i> References</button>
         <button class='editor-tab-btn' onclick='switchTab("hobbies")'><i class='fa-solid fa-heart'></i> Hobbies</button>
         <button class='editor-tab-btn' onclick='switchTab("custom")'><i class='fa-solid fa-folder-plus'></i> Custom</button>
+
+        <button class='editor-tab-btn' onclick='switchTab("aienhancer")'><i class='fa-solid fa-wand-magic-sparkles'></i> AI Suggestions</button>
+        <button class='editor-tab-btn' onclick='switchTab("coverletter")'><i class='fa-solid fa-envelope-open-text'></i> Cover Letter</button>
+        <button class='editor-tab-btn' onclick='switchTab("ats")'><i class='fa-solid fa-chart-line'></i> ATS Score</button>
+        <button class='editor-tab-btn' onclick='switchTab("studio")'><i class='fa-solid fa-palette'></i> Studio</button>
       </nav>
 
       <div class='editor-content'>
@@ -432,6 +524,15 @@
               <input id='personal-website' type='url' placeholder='https://goodbuilder.cv' oninput='updatePersonalInfo()'/>
             </div>
           </div>
+          <div class='form-group'>
+            <label>Profile Photo Display Style</label>
+            <select id='personal-photoStyle' onchange='updatePersonalInfo()'>
+              <option value='circle' selected='selected'>Circular Badge</option>
+              <option value='rounded'>Rounded Square</option>
+              <option value='square'>Classic Square</option>
+            </select>
+          </div>
+
           <div class='form-group'>
             <label>Profile Photo URL or Upload File</label>
             <input id='personal-photo' type='text' placeholder='https://example.com/photo.jpg or choose file' oninput='updatePersonalInfo()'/>
@@ -538,6 +639,108 @@
           <div id='custom-sections-list'></div>
         </div>
 
+                <!-- Tab 14: Cover Letter Builder -->
+        <div class='tab-pane' id='tab-coverletter'>
+          <div class='section-title'>Cover Letter Builder</div>
+          <div class='form-group'>
+            <label>Recipient Name / Title</label>
+            <input id='cl-recipient' type='text' placeholder='Hiring Manager / Jane Smith' oninput='updateCoverLetter()'/>
+          </div>
+          <div class='form-group'>
+            <label>Company Name &amp; Address</label>
+            <input id='cl-company' type='text' placeholder='Acme Corp, San Francisco, CA' oninput='updateCoverLetter()'/>
+          </div>
+          <div class='form-group'>
+            <label>Opening Salutation</label>
+            <input id='cl-salutation' type='text' placeholder='Dear Hiring Manager,' oninput='updateCoverLetter()'/>
+          </div>
+          <div class='form-group'>
+            <label>Cover Letter Content Body</label>
+            <textarea id='cl-body' rows='8' placeholder='I am writing to express my strong interest in the Lead Software Engineer position...' oninput='updateCoverLetter()'></textarea>
+          </div>
+          <div class='form-group'>
+            <label>Closing Sign-off</label>
+            <input id='cl-closing' type='text' placeholder='Sincerely, Alex Morgan' oninput='updateCoverLetter()'/>
+          </div>
+        </div>
+
+                <!-- Tab 16: AI Resume Content Enhancer & Power Prompts -->
+        <div class="tab-pane" id="tab-aienhancer">
+          <div class="section-title">AI Content &amp; Action Verbs Enhancer</div>
+          <p style="font-size:0.85rem; color:#475569;">Copy high-impact action verbs and industry phrase templates to instantly boost your resume strength.</p>
+
+          <div style="margin-bottom:1.25rem;">
+            <label>Select Industry / Field</label>
+            <select id="ai-industry-select" onchange="renderAIPrompts(this.value)">
+              <option value="tech" selected="selected">Software &amp; Technology</option>
+              <option value="management">Management &amp; Leadership</option>
+              <option value="marketing">Marketing &amp; Growth</option>
+              <option value="finance">Finance &amp; Operations</option>
+            </select>
+          </div>
+
+          <div style="font-weight:700; font-size:0.9rem; margin-bottom:0.5rem; color:#0f172a;">High-Impact Action Verbs</div>
+          <div id="ai-action-verbs-list" style="display:flex; flex-wrap:wrap; gap:0.35rem; margin-bottom:1.25rem;"></div>
+
+          <div style="font-weight:700; font-size:0.9rem; margin-bottom:0.5rem; color:#0f172a;">High-Impact Bullet Point Templates</div>
+          <div id="ai-bullet-templates-list"></div>
+                  <div style="margin-top:1.5rem; border-top:1px solid #e2e8f0; padding-top:1rem;">
+            <div style="font-weight:700; font-size:0.9rem; margin-bottom:0.5rem; color:#0f172a;"><i class="fa-solid fa-check-double"></i> Bullet Points Quality Proofreader</div>
+            <p style="font-size:0.8rem; color:#64748b; margin-bottom:0.75rem;">Real-time analysis of your work experience bullet points for power verbs and metrics:</p>
+            <div id="ai-proofreader-feedback"></div>
+          </div>
+        </div>
+        <!-- Tab 15: ATS Compatibility Score & Feedback -->
+        <div class='tab-pane' id='tab-ats'>
+          <div class='section-title'>ATS Optimization Score</div>
+          <div style='background:#f8fafc; border:1px solid #e2e8f0; border-radius:0.5rem; padding:1.25rem; margin-bottom:1.25rem; text-align:center;'>
+            <div style='font-size:0.85rem; color:#64748b; font-weight:600;'>COMPATIBILITY RATING</div>
+            <div id='ats-score-display' style='font-size:3rem; font-weight:800; color:#2563eb; margin:0.25rem 0;'>85%</div>
+            <div id='ats-score-badge' style='display:inline-block; font-size:0.75rem; font-weight:700; background:#dbeafe; color:#1e40af; padding:3px 10px; border-radius:12px;'>Strong ATS Match</div>
+          </div>
+          <div style='font-weight:700; font-size:0.9rem; margin-bottom:0.75rem; color:#0f172a;'>Optimization Checklist &amp; Tips</div>
+          <div id='ats-checklist-items'></div>
+        </div>
+        <!-- Tab 13: Custom Template Studio -->
+        <div class='tab-pane' id='tab-studio'>
+          <div class='section-title'>Custom Template Studio</div>
+          <p style='font-size:0.85rem; color:#475569;'>Design your custom template CSS and HTML layout structure, save it to your library, or export/import template files.</p>
+          
+          <div class='form-group'>
+            <label>Custom Template Name</label>
+            <input id='custom-template-name' type='text' placeholder='e.g. My Dark Cyberpunk CV'/>
+          </div>
+
+          <div class='form-group'>
+            <label>Custom CSS Rules</label>
+            <textarea id='custom-template-css' rows='5' placeholder='.my-custom-cv { padding: 2rem; background: #1a1a1a; color: #fff; }'></textarea>
+          </div>
+
+          <div class='form-group'>
+            <label>Custom Layout HTML Structure</label>
+            <textarea id='custom-template-html' rows='8' placeholder='&lt;div class=&quot;my-custom-cv&quot;&gt;&lt;h1&gt;{{NAME}}&lt;/h1&gt;&lt;p&gt;{{TITLE}}&lt;/p&gt;&lt;div&gt;{{SUMMARY}}&lt;/div&gt;&lt;div&gt;{{EXPERIENCE}}&lt;/div&gt;&lt;/div&gt;'></textarea>
+            <span style='font-size:0.75rem; color:#64748b;'>Available placeholders: {{NAME}}, {{TITLE}}, {{EMAIL}}, {{PHONE}}, {{LOCATION}}, {{WEBSITE}}, {{PHOTO}}, {{SUMMARY}}, {{EXPERIENCE}}, {{EDUCATION}}, {{SKILLS}}, {{PROJECTS}}, {{LANGUAGES}}, {{CERTIFICATIONS}}, {{SOCIALS}}, {{REFERENCES}}, {{CUSTOM}}</span>
+          </div>
+
+          <div style='display:flex; gap:0.5rem; flex-wrap:wrap;'>
+            <button class='btn btn-primary btn-sm' onclick='saveCustomTemplate()'><i class='fa-solid fa-save'></i> Save Template</button>
+            <button class='btn btn-outline btn-sm' onclick='exportCustomTemplate()'><i class='fa-solid fa-download'></i> Export Template JSON</button>
+            <button class='btn btn-outline btn-sm' onclick='triggerImportCustomTemplate()'><i class='fa-solid fa-upload'></i> Import Template JSON</button>
+            <input id='custom-template-file-input' style='display:none;' type='file' accept='.json' onchange='importCustomTemplate(event)'/>
+          </div>
+
+          <div style='margin-top:1.5rem; border-top: 1px solid #e2e8f0; padding-top: 1rem;'>
+            <div style='font-weight:700; font-size:0.95rem; margin-bottom:0.5rem; color:#0f172a;'><i class="fa-solid fa-arrows-up-down"></i> Section Placement &amp; Layout Manager</div>
+            <p style="font-size:0.8rem; color:#64748b; margin-bottom:0.75rem;">Reorder sections to customize text placement on your template:</p>
+            <div id="section-order-manager-list"></div>
+          </div>
+
+          <div style='margin-top:1.5rem;'>
+            <div style='font-weight:700; font-size:0.9rem; margin-bottom:0.5rem; color:#0f172a;'>Your Custom Templates Library</div>
+            <div id='custom-templates-library'></div>
+          </div>
+        </div>
+
       </div>
     </aside>
 
@@ -557,6 +760,12 @@
             <option value='executive'>Executive Corporate</option>
             <option value='serif'>Elegant Serif</option>
             <option value='timeline'>Timeline Professional</option>
+            <option value='europass'>European Format (Europass)</option>
+            <option value='sleekdark'>Sleek Dark Mode</option>
+            <option value='boldmodern'>Bold Modern Split</option>
+            <option value='infographic'>Infographic Sidebar</option>
+            <option value='minimalgrid'>Minimal Two-Column Grid</option>
+            <option value='coverletter'>Matching Cover Letter Document</option>
           </select>
         </div>
 
@@ -564,11 +773,14 @@
           <label>Accent Color:</label>
           <input id='select-accent-color' type='color' value='#2563eb' onchange='changeAccentColor(this.value)'/>
           <div class='color-swatches'>
-            <div class='swatch' style='background:#2563eb;' title='Royal Blue' onclick='changeAccentColor("#2563eb")'></div>
+            <div class='swatch' style='background:#2563eb;' title='Corporate Blue' onclick='changeAccentColor("#2563eb")'></div>
             <div class='swatch' style='background:#0f172a;' title='Slate Navy' onclick='changeAccentColor("#0f172a")'></div>
-            <div class='swatch' style='background:#059669;' title='Emerald' onclick='changeAccentColor("#059669")'></div>
-            <div class='swatch' style='background:#7c3aed;' title='Purple Accent' onclick='changeAccentColor("#7c3aed")'></div>
-            <div class='swatch' style='background:#dc2626;' title='Crimson' onclick='changeAccentColor("#dc2626")'></div>
+            <div class='swatch' style='background:#059669;' title='Modern Emerald' onclick='changeAccentColor("#059669")'></div>
+            <div class='swatch' style='background:#7c3aed;' title='Creative Violet' onclick='changeAccentColor("#7c3aed")'></div>
+            <div class='swatch' style='background:#dc2626;' title='Ruby Crimson' onclick='changeAccentColor("#dc2626")'></div>
+            <div class='swatch' style='background:#ea580c;' title='Sunset Amber' onclick='changeAccentColor("#ea580c")'></div>
+            <div class='swatch' style='background:#0284c7;' title='Sky Blue' onclick='changeAccentColor("#0284c7")'></div>
+            <div class='swatch' style='background:#475569;' title='Executive Graphite' onclick='changeAccentColor("#475569")'></div>
           </div>
         </div>
 
@@ -605,6 +817,9 @@
         </div>
       </div>
 
+      <!-- Inject Dynamic Custom CSS Style tag for Custom Studio Templates -->
+      <style id='custom-template-style-element'></style>
+
       <!-- Resume Document Paper -->
       <div class='resume-paper' id='resume-preview'>
         <!-- Injected via JavaScript -->
@@ -634,8 +849,10 @@
       references: [],
       hobbies: [],
       customSections: [],
-      settings: { template: 'modern', accentColor: '#2563eb', fontFamily: 'Inter', fontSize: '14px', margin: 'normal' }
+      sectionOrder: ['summary', 'experience', 'education', 'skills', 'projects', 'languages', 'certifications', 'socials', 'references', 'hobbies', 'custom'], columnAllocations: { skills: 'left', languages: 'left', hobbies: 'left', socials: 'left' }, settings: { template: 'modern', accentColor: '#2563eb', fontFamily: 'Inter', fontSize: '14px', margin: 'normal' }
     };
+
+    let userCustomTemplates = [];
 
     const sampleData = {
       personal: {
@@ -724,15 +941,25 @@
           items: [{ id: 'citem1', title: 'Coding Mentor', subtitle: 'Code.org', date: '2020 - Present', location: 'Remote', description: 'Volunteered 5 hours weekly teaching Web Development to aspiring developers.' }]
         }
       ],
-      settings: { template: 'modern', accentColor: '#2563eb', fontFamily: 'Inter', fontSize: '14px', margin: 'normal' }
+      sectionOrder: ['summary', 'experience', 'education', 'skills', 'projects', 'languages', 'certifications', 'socials', 'references', 'hobbies', 'custom'], columnAllocations: { skills: 'left', languages: 'left', hobbies: 'left', socials: 'left' }, settings: { template: 'modern', accentColor: '#2563eb', fontFamily: 'Inter', fontSize: '14px', margin: 'normal' }
     };
+
+        function getExportFilename(extension) {
+      const name = (resumeData.personal.fullName || "Document").replace(/\s+/g, "_");
+      const isCoverLetter = resumeData.settings.template === "coverletter";
+      const docType = isCoverLetter ? "CoverLetter" : "Resume";
+      return `${name}_${docType}_GoodBuilderCV.${extension}`;
+    }
 
     function generateId() { return '_' + Math.random().toString(36).substr(2, 9); }
 
     document.addEventListener('DOMContentLoaded', () => {
       loadFromLocalStorage();
+      loadCustomTemplatesFromLocalStorage();
+      updateTemplateDropdownOptions();
       syncFormFields();
       renderAllLists();
+      renderCustomTemplatesLibrary();
       renderResume();
     });
 
@@ -746,6 +973,66 @@
         resumeData = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(sampleData));
       } catch (e) {
         resumeData = JSON.parse(JSON.stringify(sampleData));
+      }
+    }
+
+    function saveCustomTemplatesToLocalStorage() {
+      try { localStorage.setItem('goodbuilder_custom_templates', JSON.stringify(userCustomTemplates)); } catch (e) {}
+    }
+
+    function loadCustomTemplatesFromLocalStorage() {
+      try {
+        const saved = localStorage.getItem('goodbuilder_custom_templates');
+        userCustomTemplates = saved ? JSON.parse(saved) : [];
+      } catch (e) { userCustomTemplates = []; }
+    }
+
+    
+    const industryPresets = {
+      pm: {
+        personal: { fullName: "Taylor Swift-Manager", jobTitle: "Senior Product Manager", email: "taylor.pm@goodbuilder.cv", phone: "+1 (555) 345-6789", location: "Seattle, WA", website: "https://goodbuilder.cv/taylorpm", photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=300" },
+        summary: "Strategic Senior Product Manager with 7+ years of experience leading cross-functional teams to launch enterprise SaaS products that drove $12M+ in ARR growth.",
+        experience: [
+          { id: "pm1", title: "Senior Product Manager", company: "CloudScale Inc", location: "Seattle, WA", startDate: "2020-04", endDate: "", current: true, description: "• Spearheaded product strategy for B2B analytics platform, increasing monthly active users by 65%.\n• Managed product roadmap and prioritized backlog across 3 agile engineering squads." }
+        ],
+        education: [{ id: "pmed1", degree: "M.B.A.", institution: "University of Washington", location: "Seattle, WA", startDate: "2016-09", endDate: "2018-06", gpa: "3.8", description: "Focus on Technology Management and Product Strategy." }],
+        skills: [{ id: "pmsk1", name: "Product Roadmap & Strategy", level: "95" }, { id: "pmsk2", name: "Agile & Scrum", level: "90" }, { id: "pmsk3", name: "User Research & A/B Testing", level: "88" }],
+        projects: [{ id: "pmproj1", title: "SaaS Onboarding Optimization", link: "https://cloudscale.com", tech: "Mixpanel, Figma, Jira", description: "Redesigned self-serve onboarding flow, boosting 14-day conversion rate by 24%." }],
+        languages: [{ id: "pmlang1", name: "English", level: "Native" }],
+        certifications: [{ id: "pmcert1", title: "Certified Scrum Product Owner (CSPO)", issuer: "Scrum Alliance", date: "2019-05", url: "" }],
+        socials: [{ id: "pmsoc1", platform: "LinkedIn", username: "in/taylorpm-product", url: "https://linkedin.com" }],
+        references: [], hobbies: [{ id: "pmhob1", name: "Podcasting" }], customSections: [],
+        sectionOrder: ["summary", "experience", "education", "skills", "projects", "certifications", "socials"],
+        settings: { template: "executive", accentColor: "#0f172a", fontFamily: "Inter", fontSize: "14px", margin: "normal" }
+      },
+      data: {
+        personal: { fullName: "Jordan Lee", jobTitle: "Senior Data Scientist & AI Specialist", email: "jordan.lee@goodbuilder.cv", phone: "+1 (555) 456-7890", location: "Boston, MA", website: "https://goodbuilder.cv/jordanlee", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300" },
+        summary: "Data Scientist with expertise in Machine Learning, Large Language Models (LLMs), predictive analytics, and big data pipelines delivering scalable AI solutions.",
+        experience: [
+          { id: "ds1", title: "Senior Data Scientist", company: "DataAI Tech", location: "Boston, MA", startDate: "2021-01", endDate: "", current: true, description: "• Built recommendation engine using PyTorch and Spark, driving 18% lift in customer engagement.\n• Deployed automated NLP pipelines for sentiment analysis processing 5M+ daily user reviews." }
+        ],
+        education: [{ id: "dsed1", degree: "M.S. in Data Science & Machine Learning", institution: "MIT", location: "Cambridge, MA", startDate: "2018-09", endDate: "2020-05", gpa: "3.95", description: "Thesis on Deep Reinforcement Learning for Algorithmic Optimization." }],
+        skills: [{ id: "dssk1", name: "Python, PyTorch & TensorFlow", level: "95" }, { id: "dssk2", name: "SQL, Spark & Snowflake", level: "92" }, { id: "dssk3", name: "LLMs & RAG Pipelines", level: "85" }],
+        projects: [{ id: "dsproj1", title: "OpenSource Sentiment LLM", link: "https://github.com/jordanlee/sentiment-llm", tech: "Python, HuggingFace, Docker", description: "Fine-tuned open-source model achieving 94% accuracy on domain-specific classification." }],
+        languages: [{ id: "dslang1", name: "English", level: "Native" }],
+        certifications: [{ id: "dscert1", title: "AWS Certified Machine Learning – Specialty", issuer: "AWS", date: "2021-11", url: "" }],
+        socials: [{ id: "dssoc1", platform: "GitHub", username: "jordanlee-ai", url: "https://github.com" }],
+        references: [], hobbies: [{ id: "dshob1", name: "Kaggle Competitions" }], customSections: [],
+        sectionOrder: ["summary", "experience", "skills", "projects", "education", "certifications"],
+        settings: { template: "sleekdark", accentColor: "#059669", fontFamily: "Roboto", fontSize: "14px", margin: "normal" }
+      }
+    };
+
+    function loadIndustryPreset(key) {
+      if (!key) return;
+      if (confirm(`Load the ${key.toUpperCase()} Industry Preset? Current unsaved changes will be replaced.`)) {
+        const preset = industryPresets[key] || sampleData;
+        resumeData = JSON.parse(JSON.stringify(preset));
+        syncFormFields();
+        renderAllLists();
+        renderResume();
+        saveToLocalStorage();
+        document.getElementById("select-preset-industry").value = "";
       }
     }
 
@@ -765,7 +1052,7 @@
           personal: { fullName: '', jobTitle: '', email: '', phone: '', location: '', website: '', photo: '' },
           summary: '', experience: [], education: [], skills: [], projects: [], languages: [], certifications: [],
           socials: [], references: [], hobbies: [], customSections: [],
-          settings: { template: 'modern', accentColor: '#2563eb', fontFamily: 'Inter', fontSize: '14px', margin: 'normal' }
+          sectionOrder: ['summary', 'experience', 'education', 'skills', 'projects', 'languages', 'certifications', 'socials', 'references', 'hobbies', 'custom'], columnAllocations: { skills: 'left', languages: 'left', hobbies: 'left', socials: 'left' }, settings: { template: 'modern', accentColor: '#2563eb', fontFamily: 'Inter', fontSize: '14px', margin: 'normal' }
         };
         syncFormFields();
         renderAllLists();
@@ -778,7 +1065,7 @@
       const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(resumeData, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute('href', dataStr);
-      downloadAnchor.setAttribute('download', `${(resumeData.personal.fullName || 'goodbuilder_cv').replace(/\s+/g, '_')}_data.json`);
+      downloadAnchor.setAttribute('download', getExportFilename('json'));
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
@@ -808,7 +1095,7 @@
 
     function downloadPDF() {
       const element = document.getElementById('resume-preview');
-      const filename = `${(resumeData.personal.fullName || 'Resume').replace(/\s+/g, '_')}_GoodBuilderCV.pdf`;
+      const filename = getExportFilename('pdf');
       const opt = {
         margin: 0,
         filename: filename,
@@ -819,6 +1106,101 @@
       html2pdf().set(opt).from(element).save();
     }
 
+    
+            function downloadStandaloneHTML() {
+      const resumeContent = document.getElementById("resume-preview").innerHTML;
+      const customCss = document.getElementById("custom-template-style-element").innerHTML;
+
+      let baseCss = "";
+      try {
+        for (let sheet of document.styleSheets) {
+          try {
+            for (let rule of sheet.cssRules) {
+              baseCss += rule.cssText + "\n";
+            }
+          } catch(e) {}
+        }
+      } catch(e) {}
+
+      const htmlContent = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>${escapeXml(resumeData.personal.fullName) || "Resume"} - Good Builder CV</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <style>
+    ${baseCss}
+    body { margin: 0; padding: 2rem; background: #f8fafc; font-family: "${resumeData.settings.fontFamily || "Inter"}", sans-serif; }
+    .cv-link { color: ${resumeData.settings.accentColor || "#2563eb"}; text-decoration: underline; word-break: break-all; }
+    .resume-paper { background: #ffffff; width: 210mm; min-height: 297mm; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.15); box-sizing: border-box; }
+    ${customCss}
+  </style>
+</head>
+<body>
+  <div class="resume-paper" style="font-family:'${resumeData.settings.fontFamily || "Inter"}', sans-serif; font-size:${resumeData.settings.fontSize || "14px"}; --accent-color:${resumeData.settings.accentColor || "#2563eb"};">
+    ${resumeContent}
+  </div>
+</body>
+</html>`;
+
+      const dataStr = "data:text/html;charset=utf-8," + encodeURIComponent(htmlContent);
+      const downloadAnchor = document.createElement("a");
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", getExportFilename("html"));
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function downloadDOCX() {
+      const resumeContent = document.getElementById("resume-preview").innerHTML;
+      const customCss = document.getElementById("custom-template-style-element").innerHTML;
+
+      let baseCss = "";
+      try {
+        for (let sheet of document.styleSheets) {
+          try {
+            for (let rule of sheet.cssRules) {
+              baseCss += rule.cssText + "\n";
+            }
+          } catch(e) {}
+        }
+      } catch(e) {}
+
+      const header = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+  <meta charset="utf-8"/>
+  <title>${escapeXml(resumeData.personal.fullName) || "Resume"} - Good Builder CV</title>
+  <style>
+    ${baseCss}
+    body { margin: 0; padding: 0; background: #ffffff; font-family: "${resumeData.settings.fontFamily || "Inter"}", sans-serif; }
+    .cv-link { color: ${resumeData.settings.accentColor || "#2563eb"}; text-decoration: underline; word-break: break-all; }
+    .resume-paper { background: #ffffff; width: 100%; margin: 0 auto; box-sizing: border-box; }
+    ${customCss}
+  </style>
+</head>
+<body>
+  <div class="resume-paper" style="font-family:'${resumeData.settings.fontFamily || "Inter"}', sans-serif; font-size:${resumeData.settings.fontSize || "14px"}; --accent-color:${resumeData.settings.accentColor || "#2563eb"};">
+    ${resumeContent}
+  </div>
+</body>
+</html>`;
+
+      const blob = new Blob(["\ufeff", header], {
+        type: "application/msword"
+      });
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = getExportFilename("doc");
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
     function switchTab(tabId) {
       document.querySelectorAll('.editor-tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
@@ -826,6 +1208,13 @@
       if (selectedBtn) selectedBtn.classList.add('active');
       const selectedPane = document.getElementById(`tab-${tabId}`);
       if (selectedPane) selectedPane.classList.add('active');
+
+      if (tabId === 'coverletter') {
+        changeTemplate('coverletter');
+        if (document.getElementById('select-template')) {
+          document.getElementById('select-template').value = 'coverletter';
+        }
+      }
     }
 
     function toggleMobileView() {
@@ -841,6 +1230,14 @@
     }
 
     function syncFormFields() {
+      if (resumeData.coverLetter) {
+        document.getElementById("cl-recipient").value = resumeData.coverLetter.recipient || "";
+        document.getElementById("cl-company").value = resumeData.coverLetter.company || "";
+        document.getElementById("cl-salutation").value = resumeData.coverLetter.salutation || "";
+        document.getElementById("cl-body").value = resumeData.coverLetter.body || "";
+        document.getElementById("cl-closing").value = resumeData.coverLetter.closing || "";
+      }
+
       document.getElementById('personal-fullName').value = resumeData.personal.fullName || '';
       document.getElementById('personal-jobTitle').value = resumeData.personal.jobTitle || '';
       document.getElementById('personal-email').value = resumeData.personal.email || '';
@@ -848,6 +1245,7 @@
       document.getElementById('personal-location').value = resumeData.personal.location || '';
       document.getElementById('personal-website').value = resumeData.personal.website || '';
       document.getElementById('personal-photo').value = resumeData.personal.photo || '';
+      if (document.getElementById('personal-photoStyle')) document.getElementById('personal-photoStyle').value = resumeData.personal.photoStyle || 'circle';
       document.getElementById('summary-text').value = resumeData.summary || '';
 
       document.getElementById('select-template').value = resumeData.settings.template || 'modern';
@@ -865,6 +1263,7 @@
       resumeData.personal.location = document.getElementById('personal-location').value;
       resumeData.personal.website = document.getElementById('personal-website').value;
       resumeData.personal.photo = document.getElementById('personal-photo').value;
+      if (document.getElementById('personal-photoStyle')) resumeData.personal.photoStyle = document.getElementById('personal-photoStyle').value;
       saveToLocalStorage();
       renderResume();
     }
@@ -900,6 +1299,127 @@
     function changeFontSize(val) { resumeData.settings.fontSize = val; saveToLocalStorage(); renderResume(); }
     function changeMargin(val) { resumeData.settings.margin = val; saveToLocalStorage(); renderResume(); }
 
+    function changeZoom(scaleVal) {
+      const paper = document.getElementById("resume-preview");
+      if (paper) {
+        paper.style.transform = `scale(${scaleVal})`;
+        paper.style.transformOrigin = "top center";
+      }
+      if (!resumeData.settings) resumeData.settings = {};
+      resumeData.settings.zoom = scaleVal;
+      saveToLocalStorage();
+    }
+
+
+    /* CUSTOM TEMPLATE STUDIO FUNCTIONS */
+    function updateTemplateDropdownOptions() {
+      const select = document.getElementById('select-template');
+      select.querySelectorAll('option[data-custom="true"]').forEach(opt => opt.remove());
+      userCustomTemplates.forEach(ct => {
+        const opt = document.createElement('option');
+        opt.value = ct.id;
+        opt.innerText = `Custom: ${ct.name}`;
+        opt.setAttribute('data-custom', 'true');
+        select.appendChild(opt);
+      });
+    }
+
+    function saveCustomTemplate() {
+      const name = document.getElementById('custom-template-name').value.trim();
+      const css = document.getElementById('custom-template-css').value;
+      const html = document.getElementById('custom-template-html').value;
+      if (!name || !html) { alert('Please enter both a template name and HTML structure.'); return; }
+
+      const id = 'custom_' + name.toLowerCase().replace(/[^a-z0-9]/g, '_');
+      const existingIndex = userCustomTemplates.findIndex(t => t.id === id);
+      const newTemplate = { id, name, css, html };
+
+      if (existingIndex >= 0) userCustomTemplates[existingIndex] = newTemplate;
+      else userCustomTemplates.push(newTemplate);
+
+      saveCustomTemplatesToLocalStorage();
+      updateTemplateDropdownOptions();
+      renderCustomTemplatesLibrary();
+      changeTemplate(id);
+      alert(`Custom Template "${name}" saved and set as current!`);
+    }
+
+    function renderCustomTemplatesLibrary() {
+      const container = document.getElementById('custom-templates-library');
+      if (!container) return;
+      container.innerHTML = '';
+      if (!userCustomTemplates.length) {
+        container.innerHTML = '<div style="font-size:0.8rem; color:#94a3b8;">No custom templates saved yet.</div>';
+        return;
+      }
+      userCustomTemplates.forEach(t => {
+        const item = document.createElement('div');
+        item.style.cssText = 'background:#f8fafc; border:1px solid #e2e8f0; padding:0.6rem 0.8rem; border-radius:0.375rem; margin-bottom:0.5rem; display:flex; justify-content:space-between; align-items:center;';
+        item.innerHTML = `
+          <span style="font-size:0.85rem; font-weight:600;">${escapeXml(t.name)}</span>
+          <div style="display:flex; gap:0.25rem;">
+            <button class="btn btn-primary btn-sm" onclick="applyCustomTemplate('${t.id}')">Apply</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteCustomTemplate('${t.id}')"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function applyCustomTemplate(id) {
+      const t = userCustomTemplates.find(x => x.id === id);
+      if (t) {
+        document.getElementById('custom-template-name').value = t.name;
+        document.getElementById('custom-template-css').value = t.css;
+        document.getElementById('custom-template-html').value = t.html;
+        changeTemplate(id);
+      }
+    }
+
+    function deleteCustomTemplate(id) {
+      if (confirm('Delete this custom template?')) {
+        userCustomTemplates = userCustomTemplates.filter(t => t.id !== id);
+        saveCustomTemplatesToLocalStorage();
+        updateTemplateDropdownOptions();
+        renderCustomTemplatesLibrary();
+        if (resumeData.settings.template === id) changeTemplate('modern');
+      }
+    }
+
+    function exportCustomTemplate() {
+      const name = document.getElementById('custom-template-name').value.trim() || 'Custom_Template';
+      const css = document.getElementById('custom-template-css').value;
+      const html = document.getElementById('custom-template-html').value;
+      const exportData = { type: 'goodbuilder_template', name, css, html };
+      const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(exportData, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute('href', dataStr);
+      downloadAnchor.setAttribute('download', `${name.replace(/\s+/g, '_')}_template.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function triggerImportCustomTemplate() { document.getElementById('custom-template-file-input').click(); }
+
+    function importCustomTemplate(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (imported && imported.name && imported.html) {
+            document.getElementById('custom-template-name').value = imported.name;
+            document.getElementById('custom-template-css').value = imported.css || '';
+            document.getElementById('custom-template-html').value = imported.html;
+            saveCustomTemplate();
+          } else { alert('Invalid template file format.'); }
+        } catch (err) { alert('Error parsing template JSON.'); }
+      };
+      reader.readAsText(file);
+    }
+
     // FORM LIST RENDERERS
     function renderExperienceList() {
       const container = document.getElementById('experience-list');
@@ -909,7 +1429,7 @@
         card.className = 'entry-card';
         card.innerHTML = `
           <div class="entry-card-header">
-            <span class="entry-card-title">${item.title || 'Role'} at ${item.company || 'Company'}</span>
+            <span class="entry-card-title">${escapeXml(item.title || 'Role')} at ${escapeXml(item.company || 'Company')}</span>
             <div class="entry-actions">
               <button class="btn btn-outline btn-sm" onclick="moveItem('experience', ${index}, -1)"><i class="fa-solid fa-arrow-up"></i></button>
               <button class="btn btn-outline btn-sm" onclick="moveItem('experience', ${index}, 1)"><i class="fa-solid fa-arrow-down"></i></button>
@@ -929,7 +1449,7 @@
             <input type="checkbox" id="exp-curr-${item.id}" ${item.current ? 'checked' : ''} onchange="updateExperienceCurrent('${item.id}', this.checked)"/>
             <label for="exp-curr-${item.id}">I currently work here</label>
           </div>
-          <div class="form-group" style="margin-top:0.75rem;"><label>Description &amp; Bullet Points</label><textarea rows="3" oninput="updateItemField('experience', '${item.id}', 'description', this.value)">${item.description || ''}</textarea></div>
+          <div class="form-group" style="margin-top:0.75rem;"><label>Description &amp; Bullet Points</label><textarea rows="3" oninput="updateItemField('experience', '${item.id}', 'description', this.value)">${escapeXml(item.description || '')}</textarea></div>
         `;
         container.appendChild(card);
       });
@@ -954,12 +1474,12 @@
     function renderEducationList() {
       const container = document.getElementById('education-list');
       container.innerHTML = '';
-      resumeData.education.forEach((item, index) => {
+      resumeData.education.forEach((item) => {
         const card = document.createElement('div');
         card.className = 'entry-card';
         card.innerHTML = `
           <div class="entry-card-header">
-            <span class="entry-card-title">${item.degree || 'Degree'} - ${item.institution || 'School'}</span>
+            <span class="entry-card-title">${escapeXml(item.degree || 'Degree')} - ${escapeXml(item.institution || 'School')}</span>
             <div class="entry-actions"><button class="btn btn-danger btn-sm" onclick="removeItem('education', '${item.id}')"><i class="fa-solid fa-trash"></i></button></div>
           </div>
           <div class="form-group"><label>Degree / Qualification</label><input type="text" value="${escapeAttr(item.degree)}" oninput="updateItemField('education', '${item.id}', 'degree', this.value)"/></div>
@@ -972,7 +1492,7 @@
             <div class="form-group"><label>End Date</label><input type="month" value="${item.endDate || ''}" oninput="updateItemField('education', '${item.id}', 'endDate', this.value)" onchange="updateItemField('education', '${item.id}', 'endDate', this.value)"/></div>
           </div>
           <div class="form-group"><label>GPA / Grade (Optional)</label><input type="text" value="${escapeAttr(item.gpa)}" oninput="updateItemField('education', '${item.id}', 'gpa', this.value)"/></div>
-          <div class="form-group"><label>Description / Honors</label><textarea rows="2" oninput="updateItemField('education', '${item.id}', 'description', this.value)">${item.description || ''}</textarea></div>
+          <div class="form-group"><label>Description / Honors</label><textarea rows="2" oninput="updateItemField('education', '${item.id}', 'description', this.value)">${escapeXml(item.description || '')}</textarea></div>
         `;
         container.appendChild(card);
       });
@@ -990,7 +1510,7 @@
         const card = document.createElement('div');
         card.className = 'entry-card';
         card.innerHTML = `
-          <div class="entry-card-header"><span class="entry-card-title">${item.name || 'New Skill'}</span><button class="btn btn-danger btn-sm" onclick="removeItem('skills', '${item.id}')"><i class="fa-solid fa-trash"></i></button></div>
+          <div class="entry-card-header"><span class="entry-card-title">${escapeXml(item.name || 'New Skill')}</span><button class="btn btn-danger btn-sm" onclick="removeItem('skills', '${item.id}')"><i class="fa-solid fa-trash"></i></button></div>
           <div class="form-row">
             <div class="form-group"><label>Skill Name</label><input type="text" value="${escapeAttr(item.name)}" oninput="updateItemField('skills', '${item.id}', 'name', this.value)"/></div>
             <div class="form-group"><label>Proficiency Rating (${item.level || '80'}%)</label><input type="range" min="10" max="100" step="5" value="${item.level || '80'}" oninput="updateItemField('skills', '${item.id}', 'level', this.value)"/></div>
@@ -1009,13 +1529,13 @@
         const card = document.createElement('div');
         card.className = 'entry-card';
         card.innerHTML = `
-          <div class="entry-card-header"><span class="entry-card-title">${item.title || 'Project'}</span><button class="btn btn-danger btn-sm" onclick="removeItem('projects', '${item.id}')"><i class="fa-solid fa-trash"></i></button></div>
+          <div class="entry-card-header"><span class="entry-card-title">${escapeXml(item.title || 'Project')}</span><button class="btn btn-danger btn-sm" onclick="removeItem('projects', '${item.id}')"><i class="fa-solid fa-trash"></i></button></div>
           <div class="form-row">
             <div class="form-group"><label>Project Title</label><input type="text" value="${escapeAttr(item.title)}" oninput="updateItemField('projects', '${item.id}', 'title', this.value)"/></div>
             <div class="form-group"><label>Link / URL</label><input type="url" value="${escapeAttr(item.link)}" oninput="updateItemField('projects', '${item.id}', 'link', this.value)"/></div>
           </div>
           <div class="form-group"><label>Technologies Used</label><input type="text" placeholder="e.g. React, Node.js" value="${escapeAttr(item.tech)}" oninput="updateItemField('projects', '${item.id}', 'tech', this.value)"/></div>
-          <div class="form-group"><label>Description</label><textarea rows="2" oninput="updateItemField('projects', '${item.id}', 'description', this.value)">${item.description || ''}</textarea></div>
+          <div class="form-group"><label>Description</label><textarea rows="2" oninput="updateItemField('projects', '${item.id}', 'description', this.value)">${escapeXml(item.description || '')}</textarea></div>
         `;
         container.appendChild(card);
       });
@@ -1029,7 +1549,7 @@
         const card = document.createElement('div');
         card.className = 'entry-card';
         card.innerHTML = `
-          <div class="entry-card-header"><span class="entry-card-title">${item.name || 'Language'}</span><button class="btn btn-danger btn-sm" onclick="removeItem('languages', '${item.id}')"><i class="fa-solid fa-trash"></i></button></div>
+          <div class="entry-card-header"><span class="entry-card-title">${escapeXml(item.name || 'Language')}</span><button class="btn btn-danger btn-sm" onclick="removeItem('languages', '${item.id}')"><i class="fa-solid fa-trash"></i></button></div>
           <div class="form-row">
             <div class="form-group"><label>Language</label><input type="text" value="${escapeAttr(item.name)}" oninput="updateItemField('languages', '${item.id}', 'name', this.value)"/></div>
             <div class="form-group"><label>Proficiency</label><input type="text" value="${escapeAttr(item.level)}" oninput="updateItemField('languages', '${item.id}', 'level', this.value)"/></div>
@@ -1047,7 +1567,7 @@
         const card = document.createElement('div');
         card.className = 'entry-card';
         card.innerHTML = `
-          <div class="entry-card-header"><span class="entry-card-title">${item.title || 'Certification'}</span><button class="btn btn-danger btn-sm" onclick="removeItem('certifications', '${item.id}')"><i class="fa-solid fa-trash"></i></button></div>
+          <div class="entry-card-header"><span class="entry-card-title">${escapeXml(item.title || 'Certification')}</span><button class="btn btn-danger btn-sm" onclick="removeItem('certifications', '${item.id}')"><i class="fa-solid fa-trash"></i></button></div>
           <div class="form-group"><label>Certification Name</label><input type="text" value="${escapeAttr(item.title)}" oninput="updateItemField('certifications', '${item.id}', 'title', this.value)"/></div>
           <div class="form-row">
             <div class="form-group"><label>Issuer</label><input type="text" value="${escapeAttr(item.issuer)}" oninput="updateItemField('certifications', '${item.id}', 'issuer', this.value)"/></div>
@@ -1067,7 +1587,7 @@
         const card = document.createElement('div');
         card.className = 'entry-card';
         card.innerHTML = `
-          <div class="entry-card-header"><span class="entry-card-title">${item.platform || 'Link'}</span><button class="btn btn-danger btn-sm" onclick="removeItem('socials', '${item.id}')"><i class="fa-solid fa-trash"></i></button></div>
+          <div class="entry-card-header"><span class="entry-card-title">${escapeXml(item.platform || 'Link')}</span><button class="btn btn-danger btn-sm" onclick="removeItem('socials', '${item.id}')"><i class="fa-solid fa-trash"></i></button></div>
           <div class="form-row">
             <div class="form-group"><label>Platform</label><input type="text" value="${escapeAttr(item.platform)}" oninput="updateItemField('socials', '${item.id}', 'platform', this.value)"/></div>
             <div class="form-group"><label>Username</label><input type="text" value="${escapeAttr(item.username)}" oninput="updateItemField('socials', '${item.id}', 'username', this.value)"/></div>
@@ -1086,7 +1606,7 @@
         const card = document.createElement('div');
         card.className = 'entry-card';
         card.innerHTML = `
-          <div class="entry-card-header"><span class="entry-card-title">${item.name || 'Reference'}</span><button class="btn btn-danger btn-sm" onclick="removeItem('references', '${item.id}')"><i class="fa-solid fa-trash"></i></button></div>
+          <div class="entry-card-header"><span class="entry-card-title">${escapeXml(item.name || 'Reference')}</span><button class="btn btn-danger btn-sm" onclick="removeItem('references', '${item.id}')"><i class="fa-solid fa-trash"></i></button></div>
           <div class="form-group"><label>Full Name</label><input type="text" value="${escapeAttr(item.name)}" oninput="updateItemField('references', '${item.id}', 'name', this.value)"/></div>
           <div class="form-group"><label>Job Title &amp; Company</label><input type="text" value="${escapeAttr(item.title)}" oninput="updateItemField('references', '${item.id}', 'title', this.value)"/></div>
           <div class="form-group"><label>Contact Info</label><input type="text" value="${escapeAttr(item.contact)}" oninput="updateItemField('references', '${item.id}', 'contact', this.value)"/></div>
@@ -1103,7 +1623,7 @@
         const card = document.createElement('div');
         card.className = 'entry-card';
         card.innerHTML = `
-          <div class="entry-card-header"><span class="entry-card-title">${item.name || 'Hobby'}</span><button class="btn btn-danger btn-sm" onclick="removeItem('hobbies', '${item.id}')"><i class="fa-solid fa-trash"></i></button></div>
+          <div class="entry-card-header"><span class="entry-card-title">${escapeXml(item.name || 'Hobby')}</span><button class="btn btn-danger btn-sm" onclick="removeItem('hobbies', '${item.id}')"><i class="fa-solid fa-trash"></i></button></div>
           <div class="form-group"><label>Hobby / Interest</label><input type="text" value="${escapeAttr(item.name)}" oninput="updateItemField('hobbies', '${item.id}', 'name', this.value)"/></div>
         `;
         container.appendChild(card);
@@ -1111,7 +1631,6 @@
     }
     function addHobby() { resumeData.hobbies.push({ id: generateId(), name: '' }); renderHobbiesList(); saveToLocalStorage(); renderResume(); }
 
-    // ENHANCED DYNAMIC CUSTOM SECTION BUILDER
     function renderCustomSectionsList() {
       const container = document.getElementById('custom-sections-list');
       container.innerHTML = '';
@@ -1120,11 +1639,11 @@
         card.className = 'entry-card';
         card.innerHTML = `
           <div class="entry-card-header">
-            <span class="entry-card-title">${sec.heading || 'Custom Section'}</span>
+            <span class="entry-card-title">${escapeXml(sec.heading || 'Custom Section')}</span>
             <div class="entry-actions">
-              <button class="btn btn-outline btn-sm" onclick="moveCustomSection(${secIndex}, -1)" title="Move Section Up"><i class="fa-solid fa-arrow-up"></i></button>
-              <button class="btn btn-outline btn-sm" onclick="moveCustomSection(${secIndex}, 1)" title="Move Section Down"><i class="fa-solid fa-arrow-down"></i></button>
-              <button class="btn btn-danger btn-sm" onclick="removeCustomSection('${sec.id}')" title="Delete Section"><i class="fa-solid fa-trash"></i></button>
+              <button class="btn btn-outline btn-sm" onclick="moveCustomSection(${secIndex}, -1)"><i class="fa-solid fa-arrow-up"></i></button>
+              <button class="btn btn-outline btn-sm" onclick="moveCustomSection(${secIndex}, 1)"><i class="fa-solid fa-arrow-down"></i></button>
+              <button class="btn btn-danger btn-sm" onclick="removeCustomSection('${sec.id}')"><i class="fa-solid fa-trash"></i></button>
             </div>
           </div>
           <div class="form-group">
@@ -1176,7 +1695,7 @@
             </div>
             <div class="form-group">
               <label>Description / Details</label>
-              <textarea rows="2" oninput="updateCustomItemField('${sec.id}', '${item.id}', 'description', this.value)">${item.description || ''}</textarea>
+              <textarea rows="2" oninput="updateCustomItemField('${sec.id}', '${item.id}', 'description', this.value)">${escapeXml(item.description || '')}</textarea>
             </div>
           `;
           itemContainer.appendChild(itemBox);
@@ -1245,7 +1764,317 @@
       }
     }
 
-    function renderAllLists() {
+        function renderSectionOrderManager() {
+      const container = document.getElementById("section-order-manager-list");
+      if (!container) return;
+      container.innerHTML = "";
+      if (!resumeData.sectionOrder) {
+        resumeData.sectionOrder = ["summary", "experience", "education", "skills", "projects", "languages", "certifications", "socials", "references", "hobbies", "custom"];
+      }
+      const names = {
+        summary: "Professional Summary",
+        experience: "Work Experience",
+        education: "Education",
+        skills: "Skills & Expertise",
+        projects: "Projects",
+        languages: "Languages",
+        certifications: "Certifications",
+        socials: "Social & Web Links",
+        references: "References",
+        hobbies: "Hobbies",
+        custom: "Custom Sections", coverletter: "Cover Letter Attachment"
+      };
+      resumeData.sectionOrder.forEach((secKey, index) => {
+        const item = document.createElement("div");
+        item.style.cssText = "background:#f8fafc; border:1px solid #cbd5e1; padding:0.5rem 0.75rem; border-radius:0.375rem; margin-bottom:0.35rem; display:flex; justify-content:space-between; align-items:center;";
+        const currentCol = (resumeData.columnAllocations && resumeData.columnAllocations[secKey]) || "right";
+        item.innerHTML = `
+          <span style="font-size:0.85rem; font-weight:600; color:#334155;"><i class="fa-solid fa-grip-vertical" style="color:#94a3b8; margin-right:0.5rem;"></i>${names[secKey] || secKey}</span>
+          <div class="entry-actions" style="align-items:center; gap:0.25rem;">
+            <select class="btn btn-outline btn-sm" style="padding:2px 4px; font-size:0.75rem;" onchange="toggleSectionColumn('${secKey}', this.value)">
+              <option value="right" ${currentCol === "right" ? "selected" : ""}>Main (Right)</option>
+              <option value="left" ${currentCol === "left" ? "selected" : ""}>Sidebar (Left)</option>
+            </select>
+            <button class="btn btn-outline btn-sm" onclick="moveSectionOrder(${index}, -1)"><i class="fa-solid fa-arrow-up"></i></button>
+            <button class="btn btn-outline btn-sm" onclick="moveSectionOrder(${index}, 1)"><i class="fa-solid fa-arrow-down"></i></button>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    
+    function toggleSectionColumn(secKey, colVal) {
+      if (!resumeData.columnAllocations) resumeData.columnAllocations = {};
+      resumeData.columnAllocations[secKey] = colVal;
+      saveToLocalStorage();
+      renderResume();
+    }
+
+    function moveSectionOrder(index, direction) {
+      if (!resumeData.sectionOrder) return;
+      const targetIndex = index + direction;
+      if (targetIndex >= 0 && targetIndex < resumeData.sectionOrder.length) {
+        const temp = resumeData.sectionOrder[index];
+        resumeData.sectionOrder[index] = resumeData.sectionOrder[targetIndex];
+        resumeData.sectionOrder[targetIndex] = temp;
+        renderSectionOrderManager();
+        saveToLocalStorage();
+        renderResume();
+      }
+    }
+
+        
+    const translations = {
+      en: { summary: "Profile Summary", experience: "Work Experience", education: "Education", skills: "Skills & Expertise", projects: "Projects", languages: "Languages", certifications: "Certifications", socials: "Links & Profiles", references: "References", hobbies: "Hobbies & Interests", present: "Present" },
+      es: { summary: "Perfil Profesional", experience: "Experiencia Laboral", education: "Educación", skills: "Habilidades y Competencias", projects: "Proyectos", languages: "Idiomas", certifications: "Certificaciones", socials: "Enlaces y Perfiles", references: "Referencias", hobbies: "Intereses y Pasatiempos", present: "Presente" },
+      fr: { summary: "Profil Professionnel", experience: "Expérience Professionnelle", education: "Formation", skills: "Compétences", projects: "Projets", languages: "Langues", certifications: "Certifications", socials: "Liens et Profils", references: "Références", hobbies: "Centres d intérêt", present: "Présent" },
+      de: { summary: "Berufsprofil", experience: "Berufserfahrung", education: "Ausbildung", skills: "Kenntnisse & Fähigkeiten", projects: "Projekte", languages: "Sprachen", certifications: "Zertifizierungen", socials: "Links & Profile", references: "Referenzen", hobbies: "Interessen & Hobbys", present: "Heute" }
+    };
+
+    function changeLanguage(langKey) {
+      if (!resumeData.settings) resumeData.settings = {};
+      resumeData.settings.language = langKey;
+      saveToLocalStorage();
+      renderResume();
+    }
+
+    function getI18nText(key) {
+      const lang = (resumeData.settings && resumeData.settings.language) || "en";
+      return (translations[lang] && translations[lang][key]) || translations["en"][key] || key;
+    }
+
+    function renderOrderedSectionsHTML(excludeKeys = []) {
+      if (!resumeData.sectionOrder) {
+        resumeData.sectionOrder = ["summary", "experience", "education", "skills", "projects", "languages", "certifications", "socials", "references", "hobbies", "custom"];
+      }
+      return resumeData.sectionOrder.map(secKey => {
+        if (excludeKeys.includes(secKey)) return "";
+        if (secKey === "summary" && resumeData.summary) return getSectionHTML(getI18nText("summary"), `<p style="margin:0; color:inherit;">${escapeXml(resumeData.summary)}</p>`);
+        if (secKey === "experience") return getSectionHTML(getI18nText("experience"), renderCommonExperience());
+        if (secKey === "education") return getSectionHTML(getI18nText("education"), renderCommonEducation());
+        if (secKey === "skills") return getSectionHTML(getI18nText("skills"), renderCommonSkills());
+        if (secKey === "projects") return getSectionHTML(getI18nText("projects"), renderCommonProjects());
+        if (secKey === "languages") return getSectionHTML(getI18nText("languages"), renderCommonLanguages());
+        if (secKey === "certifications") return getSectionHTML(getI18nText("certifications"), renderCommonCertifications());
+        if (secKey === "socials") return getSectionHTML(getI18nText("socials"), renderCommonSocials());
+        if (secKey === "references") return getSectionHTML(getI18nText("references"), renderCommonReferences());
+        if (secKey === "hobbies") return getSectionHTML(getI18nText("hobbies"), `<div style="display:flex; flex-wrap:wrap; gap:0.4rem;">${resumeData.hobbies.map(h => `<span style="background:#f1f5f9; color:#0f172a; padding:0.25rem 0.6rem; border-radius:4px; font-weight:600; font-size:0.8rem; border:1px solid #e2e8f0;">${escapeXml(h.name)}</span>`).join("")}</div>`);
+        if (secKey === "custom") return renderCommonCustom();
+        if (secKey === "coverletter" && resumeData.coverLetter && resumeData.coverLetter.body) {
+          const cl = resumeData.coverLetter;
+          return getSectionHTML("Cover Letter", `<div style="font-size:0.9rem; line-height:1.6; color:#334155;"><p><strong>To: ${escapeXml(cl.recipient || "")} (${escapeXml(cl.company || "")})</strong></p><p><em>${escapeXml(cl.salutation || "")}</em></p><p style="white-space:pre-line;">${escapeXml(cl.body || "")}</p><p><strong>${escapeXml(cl.closing || "")}</strong></p></div>`, "coverletter");
+        }
+        return "";
+      }).join("");
+    }
+
+    
+    
+    const aiPromptData = {
+      tech: {
+        verbs: ["Architected", "Spearheaded", "Engineered", "Optimized", "Refactored", "Automated", "Deployed", "Migrated", "Benchmarked", "Containerized"],
+        bullets: [
+          "Spearheaded migration of core services into microservices, reducing cloud latency by 35%.",
+          "Architected automated CI/CD pipelines, increasing deployment frequency by 400%.",
+          "Engineered real-time analytics dashboard serving over 100,000 active monthly users."
+        ]
+      },
+      management: {
+        verbs: ["Led", "Directed", "Orchestrated", "Negotiated", "Streamlined", "Pioneered", "Championed", "Scale-up", "Supervised", "Expanded"],
+        bullets: [
+          "Managed a cross-functional team of 15 engineers and designers delivering projects 15% ahead of schedule.",
+          "Orchestrated annual budget allocation of $2.5M, optimizing resource utilization by 22%.",
+          "Pioneered customer success strategy that reduced account churn by 18% year-over-year."
+        ]
+      },
+      marketing: {
+        verbs: ["Accelerated", "Boosted", "Converted", "Captured", "Amplified", "Monetized", "Launched", "Targeted", "Scaled", "Executed"],
+        bullets: [
+          "Launched targeted multi-channel campaign generating 45,000 qualified leads in Q3.",
+          "Accelerated organic traffic by 120% through data-driven SEO content strategy.",
+          "Boosted social media engagement rates by 85% with interactive video campaigns."
+        ]
+      },
+      finance: {
+        verbs: ["Forecasted", "Audited", "Minimized", "Reconciled", "Maximize", "Consolidated", "Analyzed", "Structured", "Mitigated", "Allocated"],
+        bullets: [
+          "Audited operational expenses, identifying $150K in annual cost savings.",
+          "Forecasted cash flow models with 98% accuracy across 4 consecutive quarters.",
+          "Structured debt financing package optimizing working capital ratio by 14%."
+        ]
+      }
+    };
+
+    function renderAIPrompts(industryKey) {
+      const data = aiPromptData[industryKey] || aiPromptData.tech;
+      const verbsBox = document.getElementById("ai-action-verbs-list");
+      const bulletsBox = document.getElementById("ai-bullet-templates-list");
+
+      if (verbsBox) {
+        verbsBox.innerHTML = data.verbs.map(v => `<span style="background:#e0f2fe; color:#0369a1; padding:3px 8px; border-radius:12px; font-size:0.75rem; font-weight:600; cursor:pointer;" title="Click to copy" onclick="navigator.clipboard.writeText('${v}')">${v}</span>`).join("");
+      }
+
+      if (bulletsBox) {
+        bulletsBox.innerHTML = data.bullets.map(b => `
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:0.6rem 0.8rem; border-radius:0.375rem; margin-bottom:0.5rem; font-size:0.8rem; color:#334155; display:flex; justify-content:space-between; align-items:center;">
+            <span>${escapeXml(b)}</span>
+            <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText('${escapeAttr(b)}'); alert('Copied!');"><i class="fa-solid fa-copy"></i> Copy</button>
+          </div>
+        `).join("");
+      }
+    }
+
+    
+    function runBulletProofreader() {
+      const container = document.getElementById("ai-proofreader-feedback");
+      if (!container) return;
+      
+      let items = [];
+      const expList = resumeData.experience || [];
+      if (!expList.length) {
+        container.innerHTML = `<div style="font-size:0.8rem; color:#94a3b8;">Add work experience bullet points to run proofreading analysis.</div>`;
+        return;
+      }
+
+      expList.forEach((exp, idx) => {
+        const text = exp.description || "";
+        if (!text) return;
+        const bullets = text.split("\n").filter(b => b.trim().length > 0);
+        bullets.forEach((bullet, bIdx) => {
+          let warnings = [];
+          if (!/^[•\-*\d]/i.test(bullet.trim()) && !/^[A-Z]/i.test(bullet.trim())) {
+            warnings.push("Bullet point should start with an action verb or bullet symbol.");
+          }
+          if (!/\d+|%|\$|M|K/i.test(bullet)) {
+            warnings.push("Consider adding quantifiable metrics or impact numbers (e.g., %, $, numbers).");
+          }
+          if (bullet.length < 25) {
+            warnings.push("Bullet point is too short. Elaborate on your task and result.");
+          }
+          items.push({
+            role: exp.title || "Job #" + (idx + 1),
+            bullet: bullet,
+            warnings: warnings
+          });
+        });
+      });
+
+      if (!items.length) {
+        container.innerHTML = `<div style="font-size:0.8rem; color:#10b981; font-weight:600;"><i class="fa-solid fa-circle-check"></i> All bullet points look well-formatted!</div>`;
+        return;
+      }
+
+      container.innerHTML = items.map(item => `
+        <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:0.6rem; border-radius:0.375rem; margin-bottom:0.5rem; font-size:0.8rem;">
+          <div style="font-weight:700; color:#0f172a; margin-bottom:0.25rem;">${escapeXml(item.role)}: "${escapeXml(item.bullet)}"</div>
+          ${item.warnings.length ? item.warnings.map(w => `<div style="color:#d97706; font-size:0.75rem;"><i class="fa-solid fa-triangle-exclamation"></i> ${escapeXml(w)}</div>`).join("") : `<div style="color:#10b981; font-size:0.75rem;"><i class="fa-solid fa-check"></i> Great impact bullet point!</div>`}
+        </div>
+      `).join("");
+    }
+
+    
+    function analyzeJobKeywords(jdText) {
+      const resultsBox = document.getElementById("ats-keyword-match-results");
+      if (!resultsBox) return;
+      if (!jdText || jdText.trim().length < 20) {
+        resultsBox.innerHTML = `<div style="font-size:0.8rem; color:#94a3b8;">Paste a job description above to calculate keyword match rate.</div>`;
+        return;
+      }
+
+      // Build resume corpus text
+      const p = resumeData.personal;
+      let resumeCorpus = `${p.fullName} ${p.jobTitle} ${resumeData.summary} ` +
+        (resumeData.experience || []).map(e => `${e.title} ${e.company} ${e.description}`).join(" ") + " " +
+        (resumeData.skills || []).map(s => s.name).join(" ") + " " +
+        (resumeData.projects || []).map(pr => `${pr.title} ${pr.tech} ${pr.description}`).join(" ");
+
+      resumeCorpus = resumeCorpus.toLowerCase();
+
+      // Extract unique words > 3 letters from JD
+      const stopwords = new Set(["the", "and", "for", "with", "that", "this", "from", "have", "your", "will", "are", "their", "about", "work", "must", "they", "been", "team"]);
+      const jdWords = jdText.toLowerCase().replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(w => w.length > 3 && !stopwords.has(w));
+      const wordCounts = {};
+      jdWords.forEach(w => wordCounts[w] = (wordCounts[w] || 0) + 1);
+
+      const topKeywords = Object.keys(wordCounts).sort((a,b) => wordCounts[b] - wordCounts[a]).slice(0, 15);
+      let matchedCount = 0;
+      const keyItems = topKeywords.map(kw => {
+        const found = resumeCorpus.includes(kw);
+        if (found) matchedCount++;
+        return `<span style="background:${found ? "#dcfce7" : "#fee2e2"}; color:${found ? "#166534" : "#991b1b"}; padding:2px 8px; border-radius:12px; font-size:0.75rem; font-weight:600; margin-right:4px; margin-bottom:4px; display:inline-block;">${found ? "✓" : "✗"} ${escapeXml(kw)}</span>`;
+      });
+
+      const matchPercentage = topKeywords.length ? Math.round((matchedCount / topKeywords.length) * 100) : 0;
+
+      resultsBox.innerHTML = `
+        <div style="font-size:0.85rem; font-weight:700; color:#0f172a; margin-bottom:0.5rem;">
+          Keyword Match Rate: <span style="color:${matchPercentage >= 70 ? "#10b981" : "#d97706"};">${matchPercentage}%</span> (${matchedCount}/${topKeywords.length} terms found)
+        </div>
+        <div>${keyItems.join("")}</div>
+      `;
+    }
+
+    function calculateATSScore() {
+      let score = 0;
+      let checklist = [];
+
+      const p = resumeData.personal;
+      if (p.fullName && p.fullName.trim().length > 2) { score += 10; checklist.push({ pass: true, text: "Full Name provided" }); }
+      else { checklist.push({ pass: false, text: "Add your Full Name" }); }
+
+      if (p.email && p.email.includes("@")) { score += 10; checklist.push({ pass: true, text: "Valid Email address provided" }); }
+      else { checklist.push({ pass: false, text: "Add a valid Email address" }); }
+
+      if (p.phone && p.phone.trim().length > 5) { score += 10; checklist.push({ pass: true, text: "Phone number included" }); }
+      else { checklist.push({ pass: false, text: "Add a Phone number" }); }
+
+      if (resumeData.summary && resumeData.summary.length > 50) { score += 15; checklist.push({ pass: true, text: "Professional Summary is detailed" }); }
+      else { checklist.push({ pass: false, text: "Expand Professional Summary to at least 50 characters" }); }
+
+      if (resumeData.experience && resumeData.experience.length >= 2) { score += 20; checklist.push({ pass: true, text: "Work Experience has 2+ detailed entries" }); }
+      else { checklist.push({ pass: false, text: "Add at least 2 Work Experience entries" }); }
+
+      if (resumeData.skills && resumeData.skills.length >= 5) { score += 15; checklist.push({ pass: true, text: "Key Skills section has 5+ items" }); }
+      else { checklist.push({ pass: false, text: "List at least 5 key Technical or Soft Skills" }); }
+
+      if (resumeData.education && resumeData.education.length >= 1) { score += 10; checklist.push({ pass: true, text: "Education history included" }); }
+      else { checklist.push({ pass: false, text: "Add Education history" }); }
+
+      if (resumeData.projects && resumeData.projects.length >= 1) { score += 10; checklist.push({ pass: true, text: "Projects / Achievements included" }); }
+      else { checklist.push({ pass: false, text: "Include at least 1 Project or key achievement" }); }
+
+      const display = document.getElementById("ats-score-display");
+      const badge = document.getElementById("ats-score-badge");
+      const container = document.getElementById("ats-checklist-items");
+
+      if (display && container) {
+        display.innerText = score + "%";
+        if (score >= 80) { badge.innerText = "High ATS Match"; badge.style.background = "#dcfce7"; badge.style.color = "#166534"; }
+        else if (score >= 50) { badge.innerText = "Moderate ATS Match"; badge.style.background = "#fef9c3"; badge.style.color = "#854d0e"; }
+        else { badge.innerText = "Needs Optimization"; badge.style.background = "#fee2e2"; badge.style.color = "#991b1b"; }
+
+        container.innerHTML = checklist.map(c => `
+          <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; margin-bottom:0.5rem;">
+            <i class="fa-solid ${c.pass ? "fa-circle-check" : "fa-circle-xmark"}" style="color:${c.pass ? "#10b981" : "#ef4444"};"></i>
+            <span style="color:${c.pass ? "#334155" : "#991b1b"};">${escapeXml(c.text)}</span>
+          </div>
+        `).join("");
+      }
+    }
+
+    function updateCoverLetter() {
+      if (!resumeData.coverLetter) resumeData.coverLetter = {};
+      resumeData.coverLetter.recipient = document.getElementById("cl-recipient").value;
+      resumeData.coverLetter.company = document.getElementById("cl-company").value;
+      resumeData.coverLetter.salutation = document.getElementById("cl-salutation").value;
+      resumeData.coverLetter.body = document.getElementById("cl-body").value;
+      resumeData.coverLetter.closing = document.getElementById("cl-closing").value;
+      saveToLocalStorage();
+      renderResume();
+    }
+
+    function renderAllLists() { calculateATSScore(); runBulletProofreader(); renderAIPrompts('tech'); renderSectionOrderManager();
       renderExperienceList(); renderEducationList(); renderSkillsList(); renderProjectsList();
       renderLanguagesList(); renderCertificationsList(); renderSocialsList(); renderReferencesList();
       renderHobbiesList(); renderCustomSectionsList();
@@ -1270,7 +2099,9 @@
       }
     }
 
-    function escapeAttr(str) { return str ? str.replace(/"/g, '&quot;').replace(/'/g, '&#39;') : ''; }
+    function escapeXml(str) { return str ? String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : ''; }
+    function escapeAttr(str) { return str ? String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : ''; }
+
     function formatDate(dateStr) {
       if (!dateStr) return '';
       const [year, month] = dateStr.split('-');
@@ -1280,11 +2111,27 @@
       return date.toLocaleString('default', { month: 'short' }) + ' ' + year;
     }
 
+    function formatURL(url) {
+      if (!url) return '';
+      if (!/^https?:\/\//i.test(url)) return 'https://' + url;
+      return url;
+    }
+
+    function formatMailto(email) {
+      if (!email) return '';
+      return 'mailto:' + email.trim();
+    }
+
+    function formatTel(phone) {
+      if (!phone) return '';
+      return 'tel:' + phone.replace(/[^\d+]/g, '');
+    }
+
     // SECTION RENDER HELPERS
     function getSectionHTML(title, content) {
       if (!content) return '';
       return `<div style="margin-bottom:1.25rem;">
-        <h3 style="color:var(--accent-color); font-size:1.05rem; font-weight:700; border-bottom:2px solid var(--accent-color); padding-bottom:3px; margin-bottom:0.6rem; text-transform:uppercase;">${title}</h3>
+        <h3 style="color:var(--accent-color); font-size:1.05rem; font-weight:700; border-bottom:2px solid var(--accent-color); padding-bottom:3px; margin-bottom:0.6rem; text-transform:uppercase;">${escapeXml(title)}</h3>
         ${content}
       </div>`;
     }
@@ -1294,11 +2141,11 @@
       return resumeData.experience.map(e => `
         <div style="margin-bottom:0.85rem;">
           <div style="display:flex; justify-content:space-between; font-weight:700;">
-            <span style="color:#0f172a;">${e.title}</span>
+            <span style="color:#0f172a;">${escapeXml(e.title)}</span>
             <span style="color:var(--accent-color); font-size:0.8rem;">${formatDate(e.startDate)}${e.startDate || e.endDate || e.current ? ' - ' : ''}${e.current ? 'Present' : formatDate(e.endDate)}</span>
           </div>
-          <div style="font-size:0.85rem; color:#475569; font-weight:500;">${e.company} ${e.location ? `• ${e.location}` : ''}</div>
-          <div style="font-size:0.85rem; color:#334155; margin-top:0.25rem; white-space:pre-line;">${e.description}</div>
+          <div style="font-size:0.85rem; color:#475569; font-weight:500;">${escapeXml(e.company)} ${e.location ? `• ${escapeXml(e.location)}` : ''}</div>
+          <div style="font-size:0.85rem; color:#334155; margin-top:0.25rem; white-space:pre-line;">${escapeXml(e.description)}</div>
         </div>
       `).join('');
     }
@@ -1308,11 +2155,11 @@
       return resumeData.education.map(e => `
         <div style="margin-bottom:0.65rem;">
           <div style="display:flex; justify-content:space-between; font-weight:700;">
-            <span>${e.degree}</span>
+            <span>${escapeXml(e.degree)}</span>
             <span style="color:#64748b; font-size:0.8rem;">${formatDate(e.startDate)}${e.startDate || e.endDate ? ' - ' : ''}${formatDate(e.endDate)}</span>
           </div>
-          <div style="font-size:0.85rem; color:#475569;">${e.institution} ${e.location ? `(${e.location})` : ''} ${e.gpa ? `• GPA: ${e.gpa}` : ''}</div>
-          ${e.description ? `<div style="font-size:0.8rem; color:#64748b;">${e.description}</div>` : ''}
+          <div style="font-size:0.85rem; color:#475569;">${escapeXml(e.institution)} ${e.location ? `(${escapeXml(e.location)})` : ''} ${e.gpa ? `• GPA: ${escapeXml(e.gpa)}` : ''}</div>
+          ${e.description ? `<div style="font-size:0.8rem; color:#64748b;">${escapeXml(e.description)}</div>` : ''}
         </div>
       `).join('');
     }
@@ -1320,7 +2167,7 @@
     function renderCommonSkills() {
       if (!resumeData.skills.length) return '';
       return `<div style="display:flex; flex-wrap:wrap; gap:0.4rem;">
-        ${resumeData.skills.map(s => `<span style="background:#f1f5f9; color:#0f172a; padding:0.25rem 0.6rem; border-radius:4px; font-weight:600; font-size:0.8rem; border:1px solid #e2e8f0;">${s.name} ${s.level ? `(${s.level}%)` : ''}</span>`).join('')}
+        ${resumeData.skills.map(s => `<span style="background:#f1f5f9; color:#0f172a; padding:0.25rem 0.6rem; border-radius:4px; font-weight:600; font-size:0.8rem; border:1px solid #e2e8f0;">${escapeXml(s.name)} ${s.level ? `(${s.level}%)` : ''}</span>`).join('')}
       </div>`;
     }
 
@@ -1329,11 +2176,11 @@
       return resumeData.projects.map(p => `
         <div style="margin-bottom:0.75rem;">
           <div style="display:flex; justify-content:space-between; font-weight:700;">
-            <span>${p.title}</span>
-            ${p.link ? `<a href="${p.link}" target="_blank" style="color:var(--accent-color); font-size:0.8rem; text-decoration:none;">Link ↗</a>` : ''}
+            <span>${escapeXml(p.title)}</span>
+            ${p.link ? `<a class="cv-link" href="${escapeAttr(formatURL(p.link))}" target="_blank" style="color:var(--accent-color); font-size:0.8rem; text-decoration:none;">Link ↗</a>` : ''}
           </div>
-          ${p.tech ? `<div style="font-size:0.75rem; color:var(--accent-color); font-weight:600;">${p.tech}</div>` : ''}
-          <div style="font-size:0.85rem; color:#334155;">${p.description}</div>
+          ${p.tech ? `<div style="font-size:0.75rem; color:var(--accent-color); font-weight:600;">${escapeXml(p.tech)}</div>` : ''}
+          <div style="font-size:0.85rem; color:#334155;">${escapeXml(p.description)}</div>
         </div>
       `).join('');
     }
@@ -1341,7 +2188,7 @@
     function renderCommonLanguages() {
       if (!resumeData.languages.length) return '';
       return `<div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
-        ${resumeData.languages.map(l => `<div style="font-size:0.85rem;"><strong>${l.name}:</strong> ${l.level}</div>`).join('')}
+        ${resumeData.languages.map(l => `<div style="font-size:0.85rem;"><strong>${escapeXml(l.name)}:</strong> ${escapeXml(l.level)}</div>`).join('')}
       </div>`;
     }
 
@@ -1349,7 +2196,7 @@
       if (!resumeData.certifications.length) return '';
       return resumeData.certifications.map(c => `
         <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:0.35rem;">
-          <div><strong>${c.title}</strong> – ${c.issuer}</div>
+          <div><strong>${escapeXml(c.title)}</strong> – ${escapeXml(c.issuer)} ${c.url ? `<a class="cv-link" href="${escapeAttr(formatURL(c.url))}" target="_blank">↗</a>` : ''}</div>
           <span style="color:#64748b; font-size:0.8rem;">${formatDate(c.date)}</span>
         </div>
       `).join('');
@@ -1358,14 +2205,14 @@
     function renderCommonSocials() {
       if (!resumeData.socials.length) return '';
       return `<div style="display:flex; flex-wrap:wrap; gap:0.75rem; font-size:0.85rem;">
-        ${resumeData.socials.map(s => `<div><strong>${s.platform}:</strong> ${s.username || s.url}</div>`).join('')}
+        ${resumeData.socials.map(s => `<div><strong>${escapeXml(s.platform)}:</strong> <a class="cv-link" href="${escapeAttr(formatURL(s.url || s.username))}" target="_blank">${escapeXml(s.username || s.url)}</a></div>`).join('')}
       </div>`;
     }
 
     function renderCommonReferences() {
       if (!resumeData.references.length) return '';
       return `<div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
-        ${resumeData.references.map(r => `<div style="font-size:0.85rem;"><strong>${r.name}</strong><br/><span style="color:#475569;">${r.title}</span><br/><span style="color:#64748b; font-size:0.8rem;">${r.contact}</span></div>`).join('')}
+        ${resumeData.references.map(r => `<div style="font-size:0.85rem;"><strong>${escapeXml(r.name)}</strong><br/><span style="color:#475569;">${escapeXml(r.title)}</span><br/><span style="color:#64748b; font-size:0.8rem;">${escapeXml(r.contact)}</span></div>`).join('')}
       </div>`;
     }
 
@@ -1375,9 +2222,9 @@
         if (!sec.items || !sec.items.length) return '';
         const itemsHTML = sec.items.map(i => `
           <div style="margin-bottom:0.6rem;">
-            <div style="display:flex; justify-content:space-between; font-weight:700;"><span>${i.title}</span><span style="color:#64748b; font-size:0.8rem;">${i.date}</span></div>
-            <div style="font-size:0.85rem; color:#475569; font-weight:500;">${i.subtitle || ''} ${i.location ? `• ${i.location}` : ''}</div>
-            ${i.description ? `<div style="font-size:0.85rem; color:#334155; margin-top:0.2rem;">${i.description}</div>` : ''}
+            <div style="display:flex; justify-content:space-between; font-weight:700;"><span>${escapeXml(i.title)}</span><span style="color:#64748b; font-size:0.8rem;">${escapeXml(i.date)}</span></div>
+            <div style="font-size:0.85rem; color:#475569; font-weight:500;">${escapeXml(i.subtitle || '')} ${i.location ? `• ${escapeXml(i.location)}` : ''}</div>
+            ${i.description ? `<div style="font-size:0.85rem; color:#334155; margin-top:0.2rem;">${escapeXml(i.description)}</div>` : ''}
           </div>
         `).join('');
         return getSectionHTML(sec.heading, itemsHTML);
@@ -1385,6 +2232,71 @@
     }
 
     // MAIN RESUME RENDER ENGINE
+    
+    function renderQRCodeElement() {
+      const url = resumeData.personal.website || (resumeData.socials.length ? resumeData.socials[0].url : "");
+      if (!url) return "";
+      return `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; margin-top:1rem; padding:0.5rem; background:#fff; border-radius:6px; width:fit-content; border:1px solid #e2e8f0;">
+        <div id="qrcode-canvas" style="width:70px; height:70px;"></div>
+        <span style="font-size:0.65rem; color:#64748b; font-weight:600; margin-top:4px;">Scan Portfolio</span>
+      </div>`;
+    }
+
+    function generateQRCodeImage() {
+      setTimeout(() => {
+        const qrBox = document.getElementById("qrcode-canvas");
+        if (qrBox && typeof QRCode !== "undefined") {
+          qrBox.innerHTML = "";
+          const url = resumeData.personal.website || (resumeData.socials.length ? resumeData.socials[0].url : "");
+          if (url) {
+            new QRCode(qrBox, {
+              text: url,
+              width: 70,
+              height: 70,
+              colorDark: "#0f172a",
+              colorLight: "#ffffff",
+              correctLevel: QRCode.CorrectLevel.M
+            });
+          }
+        }
+      }, 100);
+    }
+
+    
+    function renderCoverLetterTemplate(p, padding) {
+      const cl = resumeData.coverLetter || { recipient: "Hiring Manager", company: "Company Name", salutation: "Dear Hiring Manager,", body: "Cover letter body content...", closing: "Sincerely,\n" + (p.fullName || "Your Name") };
+      return `
+        <div style="padding:${padding}; min-height:297mm; display:flex; flex-direction:column; justify-space-between;">
+          <div style="border-bottom:2px solid var(--accent-color); padding-bottom:1.5rem; margin-bottom:2rem; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-size:2.2rem; font-weight:800; color:#0f172a;">${escapeXml(p.fullName || "Your Name")}</div>
+              <div style="font-size:1.1rem; color:var(--accent-color); font-weight:600;">${escapeXml(p.jobTitle || "Profession")}</div>
+            </div>
+            <div style="text-align:right; font-size:0.85rem; color:#475569;">
+              ${p.email ? `<div>${escapeXml(p.email)}</div>` : ""}
+              ${p.phone ? `<div>${escapeXml(p.phone)}</div>` : ""}
+              ${p.location ? `<div>${escapeXml(p.location)}</div>` : ""}
+              ${p.website ? `<div>${escapeXml(p.website)}</div>` : ""}
+            </div>
+          </div>
+
+          <div style="font-size:0.9rem; color:#334155; line-height:1.7; flex:1;">
+            <div style="margin-bottom:1.5rem; font-weight:600;">
+              <div>Date: ${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</div>
+              <div style="margin-top:0.5rem; font-weight:700; color:#0f172a;">To: ${escapeXml(cl.recipient || "Hiring Manager")}</div>
+              <div>${escapeXml(cl.company || "Company")}</div>
+            </div>
+
+            <div style="font-weight:700; font-size:1rem; margin-bottom:1rem; color:#0f172a;">${escapeXml(cl.salutation || "Dear Hiring Manager,")}</div>
+
+            <div style="white-space:pre-line; margin-bottom:2rem; text-align:justify;">${escapeXml(cl.body || "")}</div>
+
+            <div style="white-space:pre-line; font-weight:600; color:#0f172a;">${escapeXml(cl.closing || "Sincerely,\n" + (p.fullName || ""))}</div>
+          </div>
+        </div>
+      `;
+    }
+
     function renderResume() {
       const container = document.getElementById('resume-preview');
       const settings = resumeData.settings;
@@ -1400,45 +2312,75 @@
       const template = settings.template || 'modern';
       let html = '';
 
-      if (template === 'modern') html = renderModernTemplate(p, paddingVal);
-      else if (template === 'classic') html = renderClassicTemplate(p, paddingVal);
-      else if (template === 'minimal') html = renderMinimalTemplate(p, paddingVal);
-      else if (template === 'creative') html = renderCreativeTemplate(p, paddingVal);
-      else if (template === 'compact') html = renderCompactTemplate(p, paddingVal);
-      else if (template === 'executive') html = renderExecutiveTemplate(p, paddingVal);
-      else if (template === 'serif') html = renderSerifTemplate(p, paddingVal);
-      else if (template === 'timeline') html = renderTimelineTemplate(p, paddingVal);
+      // Check if Custom Studio Template
+      const customT = userCustomTemplates.find(t => t.id === template);
+      if (customT) {
+        document.getElementById('custom-template-style-element').innerHTML = customT.css || '';
+        html = renderStudioCustomTemplate(customT, p);
+      } else {
+        document.getElementById('custom-template-style-element').innerHTML = '';
+        if (template === 'modern') html = renderModernTemplate(p, paddingVal);
+        else if (template === 'classic') html = renderClassicTemplate(p, paddingVal);
+        else if (template === 'minimal') html = renderMinimalTemplate(p, paddingVal);
+        else if (template === 'creative') html = renderCreativeTemplate(p, paddingVal);
+        else if (template === 'compact') html = renderCompactTemplate(p, paddingVal);
+        else if (template === 'executive') html = renderExecutiveTemplate(p, paddingVal);
+        else if (template === 'serif') html = renderSerifTemplate(p, paddingVal);
+        else if (template === 'timeline') html = renderTimelineTemplate(p, paddingVal);
+        else if (template === 'europass') html = renderEuropassTemplate(p, paddingVal);
+        else if (template === 'sleekdark') html = renderSleekDarkTemplate(p, paddingVal);
+        else if (template === 'boldmodern') html = renderBoldModernTemplate(p, paddingVal);
+        else if (template === 'infographic') html = renderInfographicTemplate(p, paddingVal);
+        else if (template === 'minimalgrid') html = renderMinimalGridTemplate(p, paddingVal);
+        else if (template === 'coverletter') html = renderCoverLetterTemplate(p, paddingVal);
+      }
 
       container.innerHTML = html;
+      generateQRCodeImage();
     }
 
-    function renderModernTemplate(p, padding) {
+    function renderStudioCustomTemplate(t, p) {
+      let tHTML = t.html || '';
+      tHTML = tHTML.replace(/\{\{NAME\}\}/g, escapeXml(p.fullName || 'Your Name'));
+      tHTML = tHTML.replace(/\{\{TITLE\}\}/g, escapeXml(p.jobTitle || 'Profession'));
+      tHTML = tHTML.replace(/\{\{EMAIL\}\}/g, escapeXml(p.email || ''));
+      tHTML = tHTML.replace(/\{\{PHONE\}\}/g, escapeXml(p.phone || ''));
+      tHTML = tHTML.replace(/\{\{LOCATION\}\}/g, escapeXml(p.location || ''));
+      tHTML = tHTML.replace(/\{\{WEBSITE\}\}/g, escapeXml(p.website || ''));
+      tHTML = tHTML.replace(/\{\{PHOTO\}\}/g, p.photo ? `<img src="${escapeAttr(p.photo)}" class="profile-img" alt="Photo"/>` : '');
+      tHTML = tHTML.replace(/\{\{SUMMARY\}\}/g, resumeData.summary ? `<p>${escapeXml(resumeData.summary)}</p>` : '');
+      tHTML = tHTML.replace(/\{\{EXPERIENCE\}\}/g, renderCommonExperience());
+      tHTML = tHTML.replace(/\{\{EDUCATION\}\}/g, renderCommonEducation());
+      tHTML = tHTML.replace(/\{\{SKILLS\}\}/g, renderCommonSkills());
+      tHTML = tHTML.replace(/\{\{PROJECTS\}\}/g, renderCommonProjects());
+      tHTML = tHTML.replace(/\{\{LANGUAGES\}\}/g, renderCommonLanguages());
+      tHTML = tHTML.replace(/\{\{CERTIFICATIONS\}\}/g, renderCommonCertifications());
+      tHTML = tHTML.replace(/\{\{SOCIALS\}\}/g, renderCommonSocials());
+      tHTML = tHTML.replace(/\{\{REFERENCES\}\}/g, renderCommonReferences());
+      tHTML = tHTML.replace(/\{\{CUSTOM\}\}/g, renderCommonCustom());
+      return tHTML;
+    }
+
+        function renderModernTemplate(p, padding) {
       return `
         <div class="template-modern">
           <div class="sidebar">
-            ${p.photo ? `<img src="${p.photo}" class="profile-img" alt="Profile"/>` : ''}
-            <div style="font-size:1.4rem; font-weight:700; text-align:center;">${p.fullName || 'Your Name'}</div>
-            <div style="font-size:0.85rem; text-align:center; opacity:0.8; margin-bottom:1.5rem;">${p.jobTitle || 'Profession'}</div>
+            ${p.photo ? `<img src="${escapeAttr(p.photo)}" class="profile-img" alt="Profile"/>` : ""}
+            <div style="font-size:1.4rem; font-weight:700; text-align:center;">${escapeXml(p.fullName || "Your Name")}</div>
+            <div style="font-size:0.85rem; text-align:center; opacity:0.8; margin-bottom:1.5rem;">${escapeXml(p.jobTitle || "Profession")}</div>
             <div style="font-size:0.8rem; margin-bottom:1.25rem;">
-              ${p.email ? `<div style="margin-bottom:0.35rem;"><i class="fa-solid fa-envelope"></i> ${p.email}</div>` : ''}
-              ${p.phone ? `<div style="margin-bottom:0.35rem;"><i class="fa-solid fa-phone"></i> ${p.phone}</div>` : ''}
-              ${p.location ? `<div style="margin-bottom:0.35rem;"><i class="fa-solid fa-location-dot"></i> ${p.location}</div>` : ''}
-              ${p.website ? `<div style="margin-bottom:0.35rem;"><i class="fa-solid fa-globe"></i> ${p.website}</div>` : ''}
+              ${p.email ? `<div style="margin-bottom:0.35rem;"><i class="fa-solid fa-envelope"></i> <a href="${escapeAttr(formatMailto(p.email))}" style="color:#fff;">${escapeXml(p.email)}</a></div>` : ""}
+              ${p.phone ? `<div style="margin-bottom:0.35rem;"><i class="fa-solid fa-phone"></i> <a href="${escapeAttr(formatTel(p.phone))}" style="color:#fff;">${escapeXml(p.phone)}</a></div>` : ""}
+              ${p.location ? `<div style="margin-bottom:0.35rem;"><i class="fa-solid fa-location-dot"></i> ${escapeXml(p.location)}</div>` : ""}
+              ${p.website ? `<div style="margin-bottom:0.35rem;"><i class="fa-solid fa-globe"></i> <a href="${escapeAttr(formatURL(p.website))}" target="_blank" style="color:#fff;">${escapeXml(p.website)}</a></div>` : ""}
             </div>
 
-            ${resumeData.skills.length ? `<div style="margin-bottom:1.25rem;"><div style="font-weight:700; text-transform:uppercase; border-bottom:1px solid rgba(255,255,255,0.3); padding-bottom:2px; margin-bottom:0.5rem;">Skills</div>${resumeData.skills.map(s => `<div style="font-size:0.8rem; margin-bottom:0.25rem;">${s.name} (${s.level}%)</div>`).join('')}</div>` : ''}
-            ${resumeData.languages.length ? `<div style="margin-bottom:1.25rem;"><div style="font-weight:700; text-transform:uppercase; border-bottom:1px solid rgba(255,255,255,0.3); padding-bottom:2px; margin-bottom:0.5rem;">Languages</div>${resumeData.languages.map(l => `<div style="font-size:0.8rem; margin-bottom:0.25rem;">${l.name} (${l.level})</div>`).join('')}</div>` : ''}
-            ${resumeData.hobbies.length ? `<div><div style="font-weight:700; text-transform:uppercase; border-bottom:1px solid rgba(255,255,255,0.3); padding-bottom:2px; margin-bottom:0.5rem;">Hobbies</div><div style="display:flex; flex-wrap:wrap; gap:0.25rem;">${resumeData.hobbies.map(h => `<span style="background:rgba(255,255,255,0.2); padding:2px 6px; border-radius:10px; font-size:0.75rem;">${h.name}</span>`).join('')}</div></div>` : ''}
+            ${resumeData.skills.length ? `<div style="margin-bottom:1.25rem;"><div style="font-weight:700; text-transform:uppercase; border-bottom:1px solid rgba(255,255,255,0.3); padding-bottom:2px; margin-bottom:0.5rem;">Skills</div>${resumeData.skills.map(s => `<div style="font-size:0.8rem; margin-bottom:0.25rem;">${escapeXml(s.name)} (${s.level}%)</div>`).join("")}</div>` : ""}
+            ${resumeData.languages.length ? `<div style="margin-bottom:1.25rem;"><div style="font-weight:700; text-transform:uppercase; border-bottom:1px solid rgba(255,255,255,0.3); padding-bottom:2px; margin-bottom:0.5rem;">Languages</div>${resumeData.languages.map(l => `<div style="font-size:0.8rem; margin-bottom:0.25rem;">${escapeXml(l.name)} (${escapeXml(l.level)})</div>`).join("")}</div>` : ""}
+            ${resumeData.hobbies.length ? `<div><div style="font-weight:700; text-transform:uppercase; border-bottom:1px solid rgba(255,255,255,0.3); padding-bottom:2px; margin-bottom:0.5rem;">Hobbies</div><div style="display:flex; flex-wrap:wrap; gap:0.25rem;">${resumeData.hobbies.map(h => `<span style="background:rgba(255,255,255,0.2); padding:2px 6px; border-radius:10px; font-size:0.75rem;">${escapeXml(h.name)}</span>`).join("")}</div></div>` : ""}
           </div>
           <div class="main-content">
-            ${resumeData.summary ? getSectionHTML('Profile Summary', `<p style="margin:0; color:#334155;">${resumeData.summary}</p>`) : ''}
-            ${getSectionHTML('Work Experience', renderCommonExperience())}
-            ${getSectionHTML('Education', renderCommonEducation())}
-            ${getSectionHTML('Projects', renderCommonProjects())}
-            ${getSectionHTML('Certifications', renderCommonCertifications())}
-            ${getSectionHTML('Links & Socials', renderCommonSocials())}
-            ${getSectionHTML('References', renderCommonReferences())}
-            ${renderCommonCustom()}
+            ${renderOrderedSectionsHTML(["skills", "languages", "hobbies"])}
           </div>
         </div>
       `;
@@ -1448,20 +2390,16 @@
       return `
         <div class="template-classic" style="padding:${padding};">
           <div class="header-classic">
-            <div class="name-classic">${p.fullName || 'YOUR NAME'}</div>
-            <div style="font-size:1.1rem; font-weight:600; color:#475569;">${p.jobTitle || 'PROFESSIONAL TITLE'}</div>
-            <div style="margin-top:0.5rem; font-size:0.85rem; color:#64748b;">${p.email || ''} • ${p.phone || ''} • ${p.location || ''} • ${p.website || ''}</div>
+            ${p.photo ? `<img src="${escapeAttr(p.photo)}" style="width:90px; height:90px; border-radius:50%; object-fit:cover; margin:0 auto 0.75rem auto; display:block;" alt="Profile"/>` : ""}
+            <div class="name-classic">${escapeXml(p.fullName || "YOUR NAME")}</div>
+            <div style="font-size:1.1rem; font-weight:600; color:#475569;">${escapeXml(p.jobTitle || "PROFESSIONAL TITLE")}</div>
+            <div style="margin-top:0.5rem; font-size:0.85rem; color:#64748b;">
+              ${p.email ? `<a href="${escapeAttr(formatMailto(p.email))}" class="cv-link">${escapeXml(p.email)}</a> • ` : ""}
+              ${p.phone ? `<a href="${escapeAttr(formatTel(p.phone))}" class="cv-link">${escapeXml(p.phone)}</a> • ` : ""}
+              ${escapeXml(p.location || "")} ${p.website ? ` • <a href="${escapeAttr(formatURL(p.website))}" target="_blank" class="cv-link">${escapeXml(p.website)}</a>` : ""}
+            </div>
           </div>
-          ${resumeData.summary ? getSectionHTML('Executive Summary', `<p>${resumeData.summary}</p>`) : ''}
-          ${getSectionHTML('Work Experience', renderCommonExperience())}
-          ${getSectionHTML('Education', renderCommonEducation())}
-          ${getSectionHTML('Skills & Competencies', renderCommonSkills())}
-          ${getSectionHTML('Projects', renderCommonProjects())}
-          ${getSectionHTML('Languages', renderCommonLanguages())}
-          ${getSectionHTML('Certifications', renderCommonCertifications())}
-          ${getSectionHTML('Links & Profiles', renderCommonSocials())}
-          ${getSectionHTML('References', renderCommonReferences())}
-          ${renderCommonCustom()}
+          ${renderOrderedSectionsHTML()}
         </div>
       `;
     }
@@ -1470,17 +2408,21 @@
       return `
         <div class="template-minimal" style="padding:${padding};">
           <div class="header-minimal">
-            <div><div style="font-size:2rem; font-weight:700;">${p.fullName || 'Your Name'}</div><div style="color:var(--accent-color); font-weight:600;">${p.jobTitle || 'Your Title'}</div></div>
-            <div style="text-align:right; font-size:0.85rem; color:#64748b;">${p.email || ''}<br/>${p.phone || ''}<br/>${p.location || ''}</div>
+            <div style="display:flex; gap:1.25rem; align-items:center;">
+              ${p.photo ? `<img src="${escapeAttr(p.photo)}" style="width:80px; height:80px; border-radius:8px; object-fit:cover;" alt="Profile"/>` : ""}
+              <div>
+                <div style="font-size:2rem; font-weight:700;">${escapeXml(p.fullName || "Your Name")}</div>
+                <div style="color:var(--accent-color); font-weight:600;">${escapeXml(p.jobTitle || "Your Title")}</div>
+              </div>
+            </div>
+            <div style="text-align:right; font-size:0.85rem; color:#64748b;">
+              ${p.email ? `<div><a href="${escapeAttr(formatMailto(p.email))}" class="cv-link">${escapeXml(p.email)}</a></div>` : ""}
+              ${p.phone ? `<div><a href="${escapeAttr(formatTel(p.phone))}" class="cv-link">${escapeXml(p.phone)}</a></div>` : ""}
+              ${p.location ? `<div>${escapeXml(p.location)}</div>` : ""}
+              ${p.website ? `<div><a href="${escapeAttr(formatURL(p.website))}" target="_blank" class="cv-link">${escapeXml(p.website)}</a></div>` : ""}
+            </div>
           </div>
-          ${resumeData.summary ? `<p style="margin-bottom:1.5rem; color:#334155;">${resumeData.summary}</p>` : ''}
-          ${getSectionHTML('Experience', renderCommonExperience())}
-          ${getSectionHTML('Education', renderCommonEducation())}
-          ${getSectionHTML('Skills', renderCommonSkills())}
-          ${getSectionHTML('Projects', renderCommonProjects())}
-          ${getSectionHTML('Certifications', renderCommonCertifications())}
-          ${getSectionHTML('Social Links', renderCommonSocials())}
-          ${renderCommonCustom()}
+          ${renderOrderedSectionsHTML()}
         </div>
       `;
     }
@@ -1489,22 +2431,19 @@
       return `
         <div class="template-creative">
           <div class="banner">
-            ${p.photo ? `<img src="${p.photo}" class="banner-img" alt="Profile"/>` : ''}
+            ${p.photo ? `<img src="${escapeAttr(p.photo)}" class="banner-img" alt="Profile"/>` : ""}
             <div>
-              <h1 style="margin:0; font-size:2rem;">${p.fullName || 'Your Name'}</h1>
-              <div style="font-size:1rem; opacity:0.9;">${p.jobTitle || 'Job Title'}</div>
-              <div style="font-size:0.85rem; margin-top:0.35rem; opacity:0.85;">${p.email || ''} | ${p.phone || ''} | ${p.location || ''}</div>
+              <h1 style="margin:0; font-size:2rem;">${escapeXml(p.fullName || "Your Name")}</h1>
+              <div style="font-size:1rem; opacity:0.9;">${escapeXml(p.jobTitle || "Job Title")}</div>
+              <div style="font-size:0.85rem; margin-top:0.35rem; opacity:0.85;">
+                ${p.email ? `<a href="${escapeAttr(formatMailto(p.email))}" style="color:#fff;">${escapeXml(p.email)}</a> | ` : ""}
+                ${p.phone ? `<a href="${escapeAttr(formatTel(p.phone))}" style="color:#fff;">${escapeXml(p.phone)}</a> | ` : ""}
+                ${escapeXml(p.location || "")} ${p.website ? ` | <a href="${escapeAttr(formatURL(p.website))}" target="_blank" style="color:#fff;">${escapeXml(p.website)}</a>` : ""}
+              </div>
             </div>
           </div>
           <div style="padding:${padding};">
-            ${resumeData.summary ? getSectionHTML('Profile Summary', `<p>${resumeData.summary}</p>`) : ''}
-            ${getSectionHTML('Experience', renderCommonExperience())}
-            ${getSectionHTML('Education', renderCommonEducation())}
-            ${getSectionHTML('Skills', renderCommonSkills())}
-            ${getSectionHTML('Projects', renderCommonProjects())}
-            ${getSectionHTML('Certifications', renderCommonCertifications())}
-            ${getSectionHTML('Links', renderCommonSocials())}
-            ${renderCommonCustom()}
+            ${renderOrderedSectionsHTML()}
           </div>
         </div>
       `;
@@ -1514,20 +2453,21 @@
       return `
         <div class="template-compact" style="padding:${padding};">
           <div style="background:#f1f5f9; padding:1rem; border-left:4px solid var(--accent-color); margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center;">
-            <div>
-              <div style="font-size:1.4rem; font-weight:700;">${p.fullName || 'Your Name'}</div>
-              <div style="color:var(--accent-color); font-weight:600;">${p.jobTitle || 'Profession'}</div>
+            <div style="display:flex; align-items:center; gap:1rem;">
+              ${p.photo ? `<img src="${escapeAttr(p.photo)}" style="width:60px; height:60px; border-radius:50%; object-fit:cover;" alt="Profile"/>` : ""}
+              <div>
+                <div style="font-size:1.4rem; font-weight:700;">${escapeXml(p.fullName || "Your Name")}</div>
+                <div style="color:var(--accent-color); font-weight:600;">${escapeXml(p.jobTitle || "Profession")}</div>
+              </div>
             </div>
-            <div style="text-align:right; font-size:0.8rem; color:#475569;">${p.email || ''}<br/>${p.phone || ''}</div>
+            <div style="text-align:right; font-size:0.8rem; color:#475569;">
+              ${p.email ? `<div><a href="${escapeAttr(formatMailto(p.email))}" class="cv-link">${escapeXml(p.email)}</a></div>` : ""}
+              ${p.phone ? `<div><a href="${escapeAttr(formatTel(p.phone))}" class="cv-link">${escapeXml(p.phone)}</a></div>` : ""}
+              ${p.location ? `<div>${escapeXml(p.location)}</div>` : ""}
+              ${p.website ? `<div><a href="${escapeAttr(formatURL(p.website))}" target="_blank" class="cv-link">${escapeXml(p.website)}</a></div>` : ""}
+            </div>
           </div>
-          ${resumeData.summary ? `<p style="margin-bottom:1rem;">${resumeData.summary}</p>` : ''}
-          ${getSectionHTML('Experience', renderCommonExperience())}
-          ${getSectionHTML('Education', renderCommonEducation())}
-          ${getSectionHTML('Skills', renderCommonSkills())}
-          ${getSectionHTML('Projects', renderCommonProjects())}
-          ${getSectionHTML('Certifications', renderCommonCertifications())}
-          ${getSectionHTML('Links', renderCommonSocials())}
-          ${renderCommonCustom()}
+          ${renderOrderedSectionsHTML()}
         </div>
       `;
     }
@@ -1536,24 +2476,21 @@
       return `
         <div class="template-executive" style="padding:${padding};">
           <div class="exec-header">
-            <div>
-              <div style="font-size:2.2rem; font-weight:800; color:#0f172a; letter-spacing:-0.02em;">${p.fullName || 'YOUR NAME'}</div>
-              <div style="font-size:1.1rem; color:var(--accent-color); font-weight:700; text-transform:uppercase;">${p.jobTitle || 'EXECUTIVE LEADER'}</div>
+            <div style="display:flex; align-items:center; gap:1.25rem;">
+              ${p.photo ? `<img src="${escapeAttr(p.photo)}" style="width:85px; height:85px; border-radius:6px; object-fit:cover; border:2px solid var(--accent-color);" alt="Profile"/>` : ""}
+              <div>
+                <div style="font-size:2.2rem; font-weight:800; color:#0f172a; letter-spacing:-0.02em;">${escapeXml(p.fullName || "YOUR NAME")}</div>
+                <div style="font-size:1.1rem; color:var(--accent-color); font-weight:700; text-transform:uppercase;">${escapeXml(p.jobTitle || "EXECUTIVE LEADER")}</div>
+              </div>
             </div>
             <div style="text-align:right; font-size:0.85rem; color:#475569;">
-              ${p.email ? `<div><i class="fa-solid fa-envelope"></i> ${p.email}</div>` : ''}
-              ${p.phone ? `<div><i class="fa-solid fa-phone"></i> ${p.phone}</div>` : ''}
-              ${p.location ? `<div><i class="fa-solid fa-location-dot"></i> ${p.location}</div>` : ''}
+              ${p.email ? `<div><i class="fa-solid fa-envelope"></i> <a href="${escapeAttr(formatMailto(p.email))}" class="cv-link">${escapeXml(p.email)}</a></div>` : ""}
+              ${p.phone ? `<div><i class="fa-solid fa-phone"></i> <a href="${escapeAttr(formatTel(p.phone))}" class="cv-link">${escapeXml(p.phone)}</a></div>` : ""}
+              ${p.location ? `<div><i class="fa-solid fa-location-dot"></i> ${escapeXml(p.location)}</div>` : ""}
+              ${p.website ? `<div><i class="fa-solid fa-globe"></i> <a href="${escapeAttr(formatURL(p.website))}" target="_blank" class="cv-link">${escapeXml(p.website)}</a></div>` : ""}
             </div>
           </div>
-          ${resumeData.summary ? getSectionHTML('Executive Overview', `<p style="color:#334155;">${resumeData.summary}</p>`) : ''}
-          ${getSectionHTML('Leadership Experience', renderCommonExperience())}
-          ${getSectionHTML('Education', renderCommonEducation())}
-          ${getSectionHTML('Core Competencies', renderCommonSkills())}
-          ${getSectionHTML('Key Projects', renderCommonProjects())}
-          ${getSectionHTML('Certifications', renderCommonCertifications())}
-          ${getSectionHTML('Links & Portfolios', renderCommonSocials())}
-          ${renderCommonCustom()}
+          ${renderOrderedSectionsHTML()}
         </div>
       `;
     }
@@ -1562,19 +2499,17 @@
       return `
         <div class="template-serif" style="padding:${padding};">
           <div class="serif-header">
-            <div class="serif-title">${p.fullName || 'Your Name'}</div>
-            <div style="font-size:1rem; font-style:italic; color:#475569;">${p.jobTitle || 'Professional Resume'}</div>
-            <div style="font-size:0.85rem; color:#64748b; margin-top:0.5rem;">${p.email || ''} • ${p.phone || ''} • ${p.location || ''}</div>
+            ${p.photo ? `<img src="${escapeAttr(p.photo)}" style="width:90px; height:90px; border-radius:50%; object-fit:cover; margin:0 auto 0.75rem auto; display:block;" alt="Profile"/>` : ""}
+            <div class="serif-title">${escapeXml(p.fullName || "Your Name")}</div>
+            <div style="font-size:1rem; font-style:italic; color:#475569;">${escapeXml(p.jobTitle || "Professional Resume")}</div>
+            <div style="font-size:0.85rem; color:#64748b; margin-top:0.5rem;">
+              ${p.email ? `<a href="${escapeAttr(formatMailto(p.email))}" class="cv-link">${escapeXml(p.email)}</a> • ` : ""}
+              ${p.phone ? `<a href="${escapeAttr(formatTel(p.phone))}" class="cv-link">${escapeXml(p.phone)}</a> • ` : ""}
+              ${escapeXml(p.location || "")} ${p.website ? ` • <a href="${escapeAttr(formatURL(p.website))}" target="_blank" class="cv-link">${escapeXml(p.website)}</a>` : ""}
+            </div>
           </div>
           <hr style="border:none; border-top:1px solid #cbd5e1; margin-bottom:1.5rem;"/>
-          ${resumeData.summary ? getSectionHTML('Biography', `<p style="text-align:justify;">${resumeData.summary}</p>`) : ''}
-          ${getSectionHTML('Experience History', renderCommonExperience())}
-          ${getSectionHTML('Education', renderCommonEducation())}
-          ${getSectionHTML('Areas of Expertise', renderCommonSkills())}
-          ${getSectionHTML('Projects', renderCommonProjects())}
-          ${getSectionHTML('Certifications', renderCommonCertifications())}
-          ${getSectionHTML('Social Links', renderCommonSocials())}
-          ${renderCommonCustom()}
+          ${renderOrderedSectionsHTML()}
         </div>
       `;
     }
@@ -1582,19 +2517,129 @@
     function renderTimelineTemplate(p, padding) {
       return `
         <div class="template-timeline" style="padding:${padding};">
-          <div style="border-bottom:2px dashed var(--accent-color); padding-bottom:1rem; margin-bottom:1.5rem;">
-            <div style="font-size:2rem; font-weight:800; color:#0f172a;">${p.fullName || 'Your Name'}</div>
-            <div style="font-size:1rem; font-weight:600; color:var(--accent-color);">${p.jobTitle || 'Career Journey'}</div>
-            <div style="font-size:0.85rem; color:#64748b; margin-top:0.35rem;">${p.email || ''} | ${p.phone || ''} | ${p.website || ''}</div>
+          <div style="border-bottom:2px dashed var(--accent-color); padding-bottom:1rem; margin-bottom:1.5rem; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-size:2rem; font-weight:800; color:#0f172a;">${escapeXml(p.fullName || "Your Name")}</div>
+              <div style="font-size:1rem; font-weight:600; color:var(--accent-color);">${escapeXml(p.jobTitle || "Career Journey")}</div>
+            </div>
+            <div style="text-align:right; font-size:0.85rem; color:#64748b;">
+              ${p.email ? `<div><a href="${escapeAttr(formatMailto(p.email))}" class="cv-link">${escapeXml(p.email)}</a></div>` : ""}
+              ${p.phone ? `<div><a href="${escapeAttr(formatTel(p.phone))}" class="cv-link">${escapeXml(p.phone)}</a></div>` : ""}
+              ${p.location ? `<div>${escapeXml(p.location)}</div>` : ""}
+              ${p.website ? `<div><a href="${escapeAttr(formatURL(p.website))}" target="_blank" class="cv-link">${escapeXml(p.website)}</a></div>` : ""}
+            </div>
           </div>
-          ${resumeData.summary ? getSectionHTML('Career Summary', `<p>${resumeData.summary}</p>`) : ''}
-          ${getSectionHTML('Career Timeline', renderCommonExperience())}
-          ${getSectionHTML('Education Timeline', renderCommonEducation())}
-          ${getSectionHTML('Technical Skills', renderCommonSkills())}
-          ${getSectionHTML('Featured Projects', renderCommonProjects())}
-          ${getSectionHTML('Certifications', renderCommonCertifications())}
-          ${getSectionHTML('Social Links', renderCommonSocials())}
-          ${renderCommonCustom()}
+          ${renderOrderedSectionsHTML()}
+        </div>
+      `;
+    }
+
+    function renderEuropassTemplate(p, padding) {
+      return `
+        <div class="template-europass">
+          <div class="europass-header">
+            ${p.photo ? `<img src="${escapeAttr(p.photo)}" style="width:100px; height:120px; object-fit:cover; border-radius:4px; border:2px solid var(--accent-color);" alt="Profile"/>` : ""}
+            <div>
+              <div style="font-size:1.8rem; font-weight:800; color:#0f172a;">${escapeXml(p.fullName || "Europass CV")}</div>
+              <div style="font-size:1rem; color:var(--accent-color); font-weight:600;">${escapeXml(p.jobTitle || "Job Position")}</div>
+              <div style="font-size:0.85rem; color:#475569; margin-top:0.5rem;">
+                ${p.email ? `<a href="${escapeAttr(formatMailto(p.email))}" class="cv-link">${escapeXml(p.email)}</a> | ` : ""}
+                ${p.phone ? `<a href="${escapeAttr(formatTel(p.phone))}" class="cv-link">${escapeXml(p.phone)}</a> | ` : ""}
+                ${escapeXml(p.location || "")} ${p.website ? ` | <a href="${escapeAttr(formatURL(p.website))}" target="_blank" class="cv-link">${escapeXml(p.website)}</a>` : ""}
+              </div>
+            </div>
+          </div>
+          ${renderOrderedSectionsHTML()}
+        </div>
+      `;
+    }
+
+    function renderSleekDarkTemplate(p, padding) {
+      return `
+        <div class="template-sleek-dark">
+          <div style="border-bottom:1px solid #334155; padding-bottom:1.5rem; margin-bottom:1.5rem; display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:1.25rem;">
+              ${p.photo ? `<img src="${escapeAttr(p.photo)}" style="width:85px; height:85px; border-radius:50%; object-fit:cover; border:2px solid var(--accent-color);" alt="Profile"/>` : ""}
+              <div>
+                <div style="font-size:2.2rem; font-weight:800; color:#ffffff;">${escapeXml(p.fullName || "Your Name")}</div>
+                <div style="font-size:1.1rem; color:var(--accent-color, #38bdf8); font-weight:600;">${escapeXml(p.jobTitle || "Developer / Designer")}</div>
+              </div>
+            </div>
+            <div style="text-align:right; font-size:0.85rem; color:#94a3b8;">
+              ${p.email ? `<div><a href="${escapeAttr(formatMailto(p.email))}" style="color:#38bdf8;">${escapeXml(p.email)}</a></div>` : ""}
+              ${p.phone ? `<div><a href="${escapeAttr(formatTel(p.phone))}" style="color:#38bdf8;">${escapeXml(p.phone)}</a></div>` : ""}
+              ${p.location ? `<div>${escapeXml(p.location)}</div>` : ""}
+              ${p.website ? `<div><a href="${escapeAttr(formatURL(p.website))}" target="_blank" style="color:#38bdf8;">${escapeXml(p.website)}</a></div>` : ""}
+            </div>
+          </div>
+          ${renderOrderedSectionsHTML()}
+        </div>
+      `;
+    }
+
+    function renderBoldModernTemplate(p, padding) {
+      return `
+        <div class="template-modern">
+          <div class="sidebar" style="background:#0f172a; border-right:4px solid var(--accent-color);">
+            ${p.photo ? `<img src="${escapeAttr(p.photo)}" class="profile-img" alt="Profile"/>` : ""}
+            <div style="font-size:1.4rem; font-weight:800; text-align:center;">${escapeXml(p.fullName || "Your Name")}</div>
+            <div style="font-size:0.85rem; text-align:center; color:var(--accent-color); font-weight:600; margin-bottom:1.5rem;">${escapeXml(p.jobTitle || "Profession")}</div>
+            <div style="font-size:0.8rem; margin-bottom:1.25rem;">
+              ${p.email ? `<div style="margin-bottom:0.35rem;"><i class="fa-solid fa-envelope"></i> <a href="${escapeAttr(formatMailto(p.email))}" style="color:#fff;">${escapeXml(p.email)}</a></div>` : ""}
+              ${p.phone ? `<div style="margin-bottom:0.35rem;"><i class="fa-solid fa-phone"></i> <a href="${escapeAttr(formatTel(p.phone))}" style="color:#fff;">${escapeXml(p.phone)}</a></div>` : ""}
+              ${p.location ? `<div style="margin-bottom:0.35rem;"><i class="fa-solid fa-location-dot"></i> ${escapeXml(p.location)}</div>` : ""}
+              ${p.website ? `<div style="margin-bottom:0.35rem;"><i class="fa-solid fa-globe"></i> <a href="${escapeAttr(formatURL(p.website))}" target="_blank" style="color:#fff;">${escapeXml(p.website)}</a></div>` : ""}
+            </div>
+            ${resumeData.skills.length ? `<div style="margin-bottom:1.25rem;"><div style="font-weight:700; text-transform:uppercase; border-bottom:1px solid rgba(255,255,255,0.3); padding-bottom:2px; margin-bottom:0.5rem;">Skills</div>${resumeData.skills.map(s => `<div style="font-size:0.8rem; margin-bottom:0.25rem;">${escapeXml(s.name)} (${s.level}%)</div>`).join("")}</div>` : ""}
+            ${resumeData.languages.length ? `<div style="margin-bottom:1.25rem;"><div style="font-weight:700; text-transform:uppercase; border-bottom:1px solid rgba(255,255,255,0.3); padding-bottom:2px; margin-bottom:0.5rem;">Languages</div>${resumeData.languages.map(l => `<div style="font-size:0.8rem; margin-bottom:0.25rem;">${escapeXml(l.name)} (${escapeXml(l.level)})</div>`).join("")}</div>` : ""}
+          </div>
+          <div class="main-content">
+            ${renderOrderedSectionsHTML(["skills", "languages"])}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderInfographicTemplate(p, padding) {
+      return `
+        <div class="template-infographic">
+          <div style="background:#f8fafc; padding:1.25rem; border-radius:8px; border:1px solid #e2e8f0;">
+            ${p.photo ? `<img src="${escapeAttr(p.photo)}" style="width:100%; height:auto; border-radius:8px; margin-bottom:1rem;" alt="Profile"/>` : ""}
+            <div style="font-weight:800; font-size:1.2rem; color:#0f172a;">${escapeXml(p.fullName || "Your Name")}</div>
+            <div style="color:var(--accent-color); font-weight:600; font-size:0.85rem; margin-bottom:1rem;">${escapeXml(p.jobTitle || "Role")}</div>
+            <div style="font-size:0.8rem; color:#475569;">
+              ${p.email ? `<div><a href="${escapeAttr(formatMailto(p.email))}" class="cv-link">${escapeXml(p.email)}</a></div>` : ""}
+              ${p.phone ? `<div><a href="${escapeAttr(formatTel(p.phone))}" class="cv-link">${escapeXml(p.phone)}</a></div>` : ""}
+              ${p.location ? `<div>${escapeXml(p.location)}</div>` : ""}
+              ${p.website ? `<div><a href="${escapeAttr(formatURL(p.website))}" target="_blank" class="cv-link">${escapeXml(p.website)}</a></div>` : ""}
+            </div>
+            ${resumeData.skills.length ? `<div style="margin-top:1.5rem;"><div style="font-weight:700; font-size:0.85rem; border-bottom:2px solid var(--accent-color); padding-bottom:2px; margin-bottom:0.5rem;">Skills</div>${resumeData.skills.map(s => `<div style="font-size:0.8rem; margin-bottom:0.25rem;">${escapeXml(s.name)} (${s.level}%)</div>`).join("")}</div>` : ""}
+          </div>
+          <div>
+            ${renderOrderedSectionsHTML(["skills"])}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderMinimalGridTemplate(p, padding) {
+      return `
+        <div class="template-minimal-grid">
+          <div>
+            ${p.photo ? `<img src="${escapeAttr(p.photo)}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; margin-bottom:0.75rem;" alt="Profile"/>` : ""}
+            <div style="font-size:2rem; font-weight:800; color:#0f172a;">${escapeXml(p.fullName || "Your Name")}</div>
+            <div style="font-size:1rem; color:var(--accent-color); font-weight:600; margin-bottom:1rem;">${escapeXml(p.jobTitle || "Profession")}</div>
+            ${renderOrderedSectionsHTML(["education", "skills", "certifications", "languages"])}
+          </div>
+          <div>
+            <div style="font-size:0.85rem; color:#64748b; margin-bottom:1.5rem; text-align:right;">
+              ${p.email ? `<div><a href="${escapeAttr(formatMailto(p.email))}" class="cv-link">${escapeXml(p.email)}</a></div>` : ""}
+              ${p.phone ? `<div><a href="${escapeAttr(formatTel(p.phone))}" class="cv-link">${escapeXml(p.phone)}</a></div>` : ""}
+              ${p.location ? `<div>${escapeXml(p.location)}</div>` : ""}
+              ${p.website ? `<div><a href="${escapeAttr(formatURL(p.website))}" target="_blank" class="cv-link">${escapeXml(p.website)}</a></div>` : ""}
+            </div>
+            ${renderOrderedSectionsHTML(["summary", "experience", "projects", "socials", "references", "hobbies", "custom"])}
+          </div>
         </div>
       `;
     }
